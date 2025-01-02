@@ -1,0 +1,62 @@
+<div class="login-Image">
+    <div class="d-flex align-items-center justify-content-center height row mx-2">
+        <div class=" col-md-3 offset-md-8 mt-5">
+            <div class="card">
+                <div class="card-body">
+                    <div class="heading text-center">
+                        <h3>Welcome Chief ..!!</h3>
+                        <p>Sign In to your account</p>
+                    </div>
+                    <form [formGroup]="loginForm">
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">Email address</label>
+                            <input type="email" class="form-control" id="exampleInputEmail1"
+                                aria-describedby="emailHelp" formControlName="email">
+
+                            <div class="text-danger position-absolute">
+                                @if(formValidator.hasError(loginForm,'email','required')){
+                                    <div >
+                                        email is required
+                                    </div>
+                                }
+
+                                @if(formValidator.hasError(loginForm,'email','pattern')){
+                                    <div>
+                                        email is not valid
+                                    </div>
+                                }
+                               
+                                
+                            </div>
+
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="exampleInputPassword1" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="exampleInputPassword1"
+                                formControlName="password">
+                        </div>
+                        <div class="input-group justify-content-between">
+                            <div class="mb-3 form-check col-6 ">
+                                <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                                <label class="form-label" for="exampleCheck1">Remember me?</label>
+                            </div>
+                            <div class="col-6 ms-auto text-end text-underline">
+                                <a (click)="navigateToforgetPassword()">
+                                    <u class="text-white">
+                                        Forget Password
+                                    </u>
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="text-end my-2 ">
+                        <button class="btn btn-light " (click)="submitForm()" [disabled]="!loginForm.valid">
+                            Submit
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

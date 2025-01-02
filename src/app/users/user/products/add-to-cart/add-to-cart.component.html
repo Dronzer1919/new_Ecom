@@ -1,0 +1,93 @@
+
+<div class="row mt-3">
+    <div class="col-md-9 ps-4">
+        <h5>
+            ADD TO CART
+        </h5>
+        <ngx-datatable #datatable class="material striped mb-4 p-2" [columnMode]="'force'" [headerHeight]="30"
+                [rowHeight]="'auto'" [scrollbarH]="true" [limit]="50" [rows]='rows'>
+            <ngx-datatable-column name="Product Id" [width]="10" [sortable]="true" [resizeable]="true">
+                <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+                    <div>
+                        <u>
+                            {{ row.id }}
+                        </u>
+                    </div>
+                </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Product Image" [width]="180" [sortable]="true" [resizeable]="true">
+                <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+                    <div>
+                        <img class="mobile" src="./../../../assets/chiken/{{data.im}}.jpg" width="25%">
+                    </div>
+                </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="Product Name" [width]="100" [sortable]="true" [resizeable]="true">
+                <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+                    {{ row.n }}
+                </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Weight" [width]="100" [sortable]="true" [resizeable]="true">
+                <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+                    500 gm
+                </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Price" [width]="180" [sortable]="true" [resizeable]="true">
+                <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+                    <div>
+                        <u>
+                            {{ row.price }}
+                        </u>
+                    </div>
+                </ng-template>
+            </ngx-datatable-column>
+        </ngx-datatable>
+    </div>
+    <div class="col-md-3 px-4 mt-4">
+        <div class="card px-2 card-title ">
+            <div class="card-header bg-white">
+                <span class="">Price Details</span>
+            </div>
+            <div class="card-body ">
+                <div class="row">
+                    <div class="col-8">
+                       <div>
+                        Price:
+                       </div> 
+                       <div>
+                        Discount:
+                       </div>
+                       <div>
+                        Delivery charges:
+                       </div>
+                    </div>
+                    <div class="col-4 text-end">
+                        <div>
+                           {{data.price}}  ₹ 
+                        </div>
+                        <div>
+                           20 ₹ 
+                        </div>
+                        <div>
+                           20 ₹ 
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-8">
+                        Total 
+                    </div>
+                    <div class="col-4 text-end">
+                        300 ₹ 
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer bg-white">
+                <button type="button" class="btn btn-outline-warning" style="width: 100%;" routerLink="/kart"
+                        routerLinkActive="active">BUY NOW</button>
+            </div>
+        </div>
+    </div>
+</div>
+<footer class="fixed-bottom"></footer>

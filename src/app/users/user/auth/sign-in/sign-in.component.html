@@ -1,0 +1,265 @@
+<div class="container m-md-2">
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-8 img"></div>
+      <div class="col-12 col-md-3 me-auto">
+        <!-- Registration Form -->
+        <ng-container *ngIf="!forGetPassword">
+          <div class="card">
+            <div class="card-body">
+              <div class="heading text-center">
+                <h3>Welcome Chief ..!!</h3>
+                <p>Create a new Account</p>
+              </div>
+  
+              <form [formGroup]="registrationForm">
+                <div class="mb-2">
+                  <label for="email">Email:</label>
+                  <input 
+                    type="email" 
+                    class="form-control" 
+                    formControlName="email" 
+                    id="email" 
+                    required 
+                     />
+                  <div *ngIf="emailExists" class="text-danger">
+                    Email already exists!
+                  </div>
+                  <div *ngIf="isCheckingEmail" class="text-info">
+                    Checking email availability...
+                  </div>
+                </div>
+                <div class="mb-2">
+                  <label *ngIf="!isOtpVerified">Password:</label>
+                  <label *ngIf="isOtpVerified">New Password:</label>
+                  <input 
+                    type="password" 
+                    class="form-control" 
+                    formControlName="password" 
+                    id="password" 
+                    required />
+                </div>
+                <div class="mb-2">
+                  <label for="confirmPassword">Confirm Password:</label>
+                  <input
+                    type="password"
+                    class="form-control"
+                    formControlName="confirmPassword"
+                    id="confirmPassword"
+                    required
+                  />
+                  <div
+                    class="text-danger"
+                    *ngIf="registrationForm.hasError('passwordMismatch') && (registrationForm.get('confirmPassword')?.dirty || registrationForm.get('confirmPassword')?.touched)"
+                  >
+                    Passwords do not match.
+                  </div>
+                </div>
+                <div class="text-end my-2">
+                  <button class="btn btn-secondary me-2" routerLink="/auth/">Cancel</button>
+                  <button
+                    class="btn btn-primary"
+                    (click)="registerUser()"
+                    [disabled]="registrationForm.invalid"
+                  >
+                    Submit
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </ng-container>
+  
+        <!-- Forgot Password Form -->
+        <ng-container *ngIf="forGetPassword">
+          <div class="card">
+            <div class="card-body">
+              <div class="heading text-center">
+                <h3>Forgot Password</h3>
+                <h6>Don't Worry Chief ..!!</h6>
+              </div>
+  
+              <form [formGroup]="registrationForm" class="mt-3">
+                <div class="mb-3">
+                  <label for="emailInput" class="form-label">Enter Your Email address</label>
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="emailInput"
+                    formControlName="email"
+                    aria-describedby="emailHelp"
+                    required
+                  />
+                </div>
+  
+                <ng-container *ngIf="isOtpVerified">
+                  <div class="mb-2">
+                    <label for="newPassword">Password:</label>
+                    <input type="password" class="form-control" formControlName="password" id="newPassword" required />
+                  </div>
+                  <div class="mb-2">
+                    <label for="confirmNewPassword">Confirm Password:</label>
+                    <input
+                      type="password"
+                      class="form-control"
+                      formControlName="confirmPassword"
+                      id="confirmNewPassword"
+                      required
+                    />
+                    <div
+                      class="text-danger"
+                      *ngIf="registrationForm.hasError('passwordMismatch') && (registrationForm.get('confirmPassword')?.dirty || registrationForm.get('confirmPassword')?.touched)"
+                    >
+                      Passwords do not match.
+                    </div>
+                  </div>
+                  <div class="text-end my-2">
+                    <button class="btn btn-secondary me-2" routerLink="/auth/">Cancel</button>
+                    <button
+                      class="btn btn-primary"
+                      (click)="submitForm()"
+                      [disabled]="registrationForm.invalid"
+                    >
+                      Submit
+                    </button>
+                  </div>
+                </ng-container>
+  
+                <!-- OTP button -->
+                <div class="text-end" *ngIf="!isOtpVerified">
+                  <button
+                    class="btn btn-primary"
+                    type="button"
+                    data-bs-toggle="modal"
+                    data-bs-target="#staticBackdrop"
+                    (click)="getOtp()"
+                    [disabled]="registrationForm.invalid"
+                  >
+                    Get OTP
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+  
+  <!-- OTP Modal -->
+  <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">OTP Verification</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="otpForm">
+            <div class="d-flex justify-content-evenly">
+              <div class="mx-2">
+                <input
+                  ugroFocusPrevNext
+                  type="tel"
+                  class="w-100 form-control"
+                  formControlName="otpOne"
+                  id="otp1"
+                  [attr.data_target_next]="'otp2'"
+                  maxlength="1"
+                  minlength="1"
+                  placeholder=""
+                />
+              </div>
+              <div class="mx-2">
+                <input
+                  ugroFocusPrevNext
+                  type="tel"
+                  class="w-100 form-control"
+                  formControlName="otpTwo"
+                  id="otp2"
+                  [attr.data_target_next]="'otp3'"
+                  [attr.data_target_prev]="'otp1'"
+                  maxlength="1"
+                  minlength="1"
+                  placeholder=""
+                />
+              </div>
+              <div class="mx-2">
+                <input
+                  ugroFocusPrevNext
+                  type="tel"
+                  class="w-100 form-control"
+                  formControlName="otpThree"
+                  id="otp3"
+                  [attr.data_target_next]="'otp4'"
+                  [attr.data_target_prev]="'otp2'"
+                  maxlength="1"
+                  minlength="1"
+                  placeholder=""
+                />
+              </div>
+              <div class="mx-2">
+                <input
+                  ugroFocusPrevNext
+                  type="tel"
+                  class="w-100 form-control"
+                  formControlName="otpFour"
+                  id="otp4"
+                  [attr.data_target_next]="'otp5'"
+                  [attr.data_target_prev]="'otp3'"
+                  maxlength="1"
+                  minlength="1"
+                  placeholder=""
+                />
+              </div>
+              <div class="mx-2">
+                <input
+                  ugroFocusPrevNext
+                  type="tel"
+                  class="w-100 form-control"
+                  formControlName="otpFive"
+                  id="otp5"
+                  [attr.data_target_next]="'otp6'"
+                  [attr.data_target_prev]="'otp4'"
+                  maxlength="1"
+                  minlength="1"
+                  placeholder=""
+                />
+              </div>
+              <div class="mx-2">
+                <input
+                  ugroFocusPrevNext
+                  type="tel"
+                  class="w-100 form-control"
+                  formControlName="otpSix"
+                  id="otp6"
+                  [attr.data_target_prev]="'otp5'"
+                  maxlength="1"
+                  minlength="1"
+                  placeholder=""
+                />
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <div *ngIf="resendOtp">
+            <a>
+              <u (click)="getOtp()">Resend OTP</u>
+            </a>
+          </div>
+          <div>
+            <button
+              type="submit"
+              class="btn btn-primary"
+              [disabled]="!otpForm.valid"
+              (click)="confirmOtp()"
+              data-bs-dismiss="modal"
+            >
+              Confirm OTP
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

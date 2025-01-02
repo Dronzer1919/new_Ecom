@@ -1,0 +1,104 @@
+<div class="card">
+    <div class="card-header text-center">
+        Preview Image
+    </div>
+    <div *ngIf="imagePreviewUrls.length > 0">
+        <div class="card-body">
+            <div>
+                <img [src]="imagePreviewUrls[currentImageIndex]" class="img-fluid" />
+            </div>
+        </div>
+        <div class="card-footer text-center">
+            <button (click)="prevImage()" class="btn btn-primary mx-2" [disabled]="imagePreviewUrls.length <= 1"><i class="bi bi-chevron-double-left"></i></button>
+            <button (click)="nextImage()" class="btn btn-primary mx-2" [disabled]="imagePreviewUrls.length <= 1"><i class="bi bi-chevron-double-right"></i></button>
+            <button  type="button" (click)="onclickEdit(selectedIMG,currentImageIndex)" class="btn btn-primary mx-2" data-bs-toggle="modal" data-bs-target="#staticBackdrop"><i class="bi bi-pencil-square"></i></button>
+            <button (click)="delete(currentImageIndex)" class="btn btn-primary mx-2"><i class="bi bi-trash3-fill"></i></button>
+        </div>
+    </div>
+    <div *ngIf="!imagePreviewUrls.length" class="p-3 text-center">
+        No Images Selected
+    </div>
+</div>
+
+
+
+
+<div class="modal fade " id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="staticBackdropLabel">Edit Image</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body px-1 py-0">
+            <div class="row">
+                <div class="col-1 d-flex justify-content-between flex-column">
+                    <button class="btn btn-primary"  data-bs-placement="top"  data-bs-toggle="tooltip"  (click)="zoomOut()"   title="Zoom In" > <i class="bi bi-zoom-in"></i></button> 
+                    <button class="btn btn-primary"  data-bs-placement="top"  data-bs-toggle="tooltip"  (click)="zoomIn()"   title="Zoom Out"> <i class="bi bi-zoom-out"></i></button>
+                    <button class="btn btn-primary"  data-bs-placement="top"  data-bs-toggle="tooltip"  (click)="rotateLeft()"   title="Rotate Clockwise"> <i class="bi bi-arrow-clockwise"></i></button>
+                    <button class="btn btn-primary"  data-bs-placement="top"  data-bs-toggle="tooltip"  (click)="rotateRight()"   title="Rotate Anti-Clockwise"><i class="bi bi-arrow-counterclockwise"></i></button>
+                    <button class="btn btn-primary"  data-bs-placement="top"  data-bs-toggle="tooltip"  (click)="flipHorizontal()"   title="Flip Horizontal"><i class="bi bi-box-arrow-in-left"></i></button>
+                    <button class="btn btn-primary"  data-bs-placement="top"  data-bs-toggle="tooltip"  (click)="flipVertical()"   title="Rotate Vertical"><i class="bi bi-box-arrow-in-down"></i></button>
+                    <button class="btn btn-primary"  data-bs-placement="top"  data-bs-toggle="tooltip"  (click)="moveLeft()"   title="Move Left"><i class="bi bi-arrow-bar-left"></i></button>
+                    <button class="btn btn-primary"  data-bs-placement="top"  data-bs-toggle="tooltip"  (click)="moveRight()"   title="Move Right"><i class="bi bi-arrow-bar-right"></i></button>
+                    <button class="btn btn-primary"  data-bs-placement="top"  data-bs-toggle="tooltip"  (click)="moveTop()"   title="Move Top"><i class="bi bi-arrow-bar-up"></i></button>
+                    <button class="btn btn-primary"  data-bs-placement="top"  data-bs-toggle="tooltip"  (click)="moveBottom()"   title="Move Bottom"><i class="bi bi-arrow-bar-down"></i></button>
+                    <button class="btn btn-primary"  data-bs-placement="top"  data-bs-toggle="tooltip"  (click)="toggleContainWithinAspectRatio()" title="Fit To Screen"><i class="bi bi-arrows-collapse-vertical"></i></button>
+                    <button class="btn btn-primary"  data-bs-placement="top"  data-bs-toggle="tooltip"  (click)="toggleAspectRatio()" title="Aspect Ratio"><i class="bi bi-aspect-ratio"></i></button>
+                    <button class="btn btn-primary"  data-bs-placement="top"  data-bs-toggle="tooltip"  (click)="allowMoveImage = !allowMoveImage;" title="Move Image"><i class="bi bi-arrows-move"></i></button>
+                    <button class="btn btn-primary"  data-bs-placement="top"  data-bs-toggle="tooltip"  (click)="resetImage()"   title="Reset"><i class="bi bi-x-octagon"></i></button>
+
+                    <!-- <button class="btn btn-primary"  data-bs-placement="top"  data-bs-toggle="tooltip"  (click)="toggleAspectRatio()"><i class="bi bi-aspect-ratio"></i> {{aspectRatio === 4/3 ? '4/3' : '16/5'}}</button>
+                    <button class="btn btn-primary"  data-bs-placement="top"  data-bs-toggle="tooltip"  (click)="allowMoveImage = !allowMoveImage;">{{allowMoveImage ? 'Disable' : 'Enable' }} <i class="bi bi-arrows-move"></i></button> -->
+                </div>
+                <div class="col-4 border-end">
+                    <h4 class="text-center"> Preview Image</h4>
+                    <img [src]="croppedImage"  class="img-fluid border-0" />
+                </div>
+                <div class="col-7">
+                    <div class="cropper-wrapper">
+                        <image-cropper
+                          [imageChangedEvent]="imageChangedEvent"
+                          [imageURL]="imageURL"
+                          [maintainAspectRatio]="true"
+                          [containWithinAspectRatio]="containWithinAspectRatio"
+                          [aspectRatio]="aspectRatio"
+                          [cropperMinWidth]="128"
+                          [onlyScaleDown]="true"
+                          [roundCropper]="false"
+                          [canvasRotation]="canvasRotation"
+                          [(transform)]="transform"
+                          [alignImage]="'center'"
+                          [style.display]="showCropper ? null : 'none'"
+                          [allowMoveImage]="allowMoveImage"
+                          [hidden]="hidden"
+                          imageAltText="Alternative image text"
+                          backgroundColor="red"
+                          output="blob"
+                          format="png"
+                          (imageCropped)="imageCropped($event)"
+                          (imageLoaded)="imageLoaded()"
+                          (cropperReady)="cropperReady($event)"
+                          (loadImageFailed)="loadImageFailed()">
+                        </image-cropper>
+                        <div *ngIf="loading" class="loader">
+                            <div class="spinner-border text-info" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+           
+              
+        </div>
+        <div class="modal-footer justify-content-end">
+            <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                <button class="btn btn-secondary" type="button">Cancel</button>
+                <button class="btn btn-primary me-md-2" type="button">Save Image</button>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>

@@ -1,0 +1,126 @@
+
+
+<div class="row">
+
+    <div class="col-md-9 ps-4 table-section">
+        <h4 class="mt-3">
+            WishList
+        </h4>
+            <ngx-datatable #datatable class="material striped mb-4 p-2" [columnMode]="'force'" [headerHeight]="30"
+                [rowHeight]="'auto'" [scrollbarH]="true" [limit]="50" [rows]='data'>
+                <ngx-datatable-column name="Product Id" [width]="10" [sortable]="true" [resizeable]="true">
+                    <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+                        <div>
+                            <u>
+                                {{ row.id }}
+                            </u>
+                        </div>
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Product Image" [width]="100" [sortable]="true" [resizeable]="true">
+                    <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+                        <div>
+                            <img class="mobile" src="./../../../assets/chiken/{{row.im}}.jpg" width="25%">
+                        </div>
+                    </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="Product Name" [width]="100" [sortable]="true" [resizeable]="true">
+                    <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+                        {{ row.n }}
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Weight" [width]="100" [sortable]="true" [resizeable]="true">
+                    <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+                        500 gm
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Price" [width]="180" [sortable]="true" [resizeable]="true">
+                    <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+                        {{ row.price }} ₹
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Delete" [width]="180" [sortable]="true" [resizeable]="true">
+                    <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+                        <div (click)="removeFromWishList(row.id)">
+                            <u>
+                                Remove Form Wishlist
+                            </u>
+                        </div>
+                        
+                    </ng-template>
+                </ngx-datatable-column>
+            </ngx-datatable>
+       
+
+    </div>
+
+    <div class="col-md-3 px-4 mt-5">
+        <div class="card px-2 card-title ">
+            <div class="card-header bg-white">
+                <span class="">Price Details</span>
+            </div>
+            <div class="card-body ">
+                <div class="row">
+                    <div class="col-8">
+                        <div>
+                            Total Price:
+                        </div>
+                        <div>
+                            Discount:
+                        </div>
+                        <div>
+                            Delivery charges:
+                        </div>
+                    </div>
+                    <div class="col-4 text-end">
+                        <div>
+                            {{totalAmount}} ₹
+                        </div>
+                        <div>
+                            {{discount}} ₹
+                        </div>
+                        <div>
+                            {{deliveryCharges}} ₹
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-8">
+                        Total Amount
+                    </div>
+                    <div class="col-4 text-end">
+                        {{finalAmount}}₹
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer bg-white">
+                <button type="button" class="btn btn-outline-warning" style="width: 100%;" routerLink="/kart"
+                    routerLinkActive="active">BUY NOW</button>
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+<div *ngIf="!(this.data && this.data.length > 0)" class="text-center mt-2">
+    <h4>
+        !!!Oops Nothing in your Wishlist
+    </h4>
+</div>
+
+
+ <!-- <form [formGroup]="form">
+    <div formArrayName="items">
+      <div *ngFor="let item of form.get('items')?.controls; let i = index" class="card">
+        <div [formGroupName]="i">
+          <span>{{ item.value.name }}</span>
+          <img src="assets/{{ item.value.favorite ? 'fav.svg' : 'fav_red.png' }}" (click)="toggleFavorite(i)" width="20px">
+
+        
+        </div>
+      </div>
+    </div>
+  </form> -->
+  

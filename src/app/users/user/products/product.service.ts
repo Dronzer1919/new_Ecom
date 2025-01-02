@@ -1,0 +1,25 @@
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { environment } from '../../../../environments/environment';
+import { EndPoints } from '../../../shared/endpoints/apiEndpoints';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class ProductService {
+
+  constructor(
+    private http: HttpClient
+
+  ) { }
+
+  public addNewProduct(payload:any) {
+    const url = EndPoints.APIURL.addProduct.replace('{0}', environment.serviceBaseUrls.DOMAIN01);
+    return this.http.post<any>(url,payload)
+  }
+
+  public getAllProduct() {
+    const url = EndPoints.APIURL.getAllProduct.replace('{0}', environment.serviceBaseUrls.DOMAIN01);
+    return this.http.get<any>(url)
+  }
+}

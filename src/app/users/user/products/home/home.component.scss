@@ -1,0 +1,82 @@
+.griddiv{
+    margin-top: 5%;
+}
+
+.mobile-image{
+    height: 15rem;
+    border-radius: 5%;
+    background-color: #e4e2e3;
+}
+
+.mobile{
+    height: 16rem ;
+    width: 100%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    transition: transform .2s;
+    border-bottom: 1px solid lightgray;
+}
+
+.product-section{
+    height: 23rem;
+    background-color: #ffffff;
+    margin-bottom: 7%;
+    border-radius: 5%;
+    border: solid 0.5px #bbb;
+}
+
+.wishlist-icons{
+    position: absolute;
+    // margin-left: 20%;
+    height: 25px;
+    width: 25px;
+    background-color: #ccc;
+    border-radius: 50%;
+    // display: inline-block;
+    // margin-top: 0.5%;
+}
+
+#heart{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 20px;
+//   height: 20px;
+  margin-top: 3px;
+}
+
+
+
+.Details{
+  padding-left: 2%;
+  margin-top: 8%;
+  position: relative;
+}
+
+.btn{
+    background-color:#f95b01;
+    color:#ffffff;
+    margin-right: 3%;
+    float: right;
+}
+
+img{
+    border-radius: 15px !important;
+}
+
+@media (max-width: 768px)  { 
+    #mobilehidden{
+        visibility:collapse;
+        margin-bottom: -90%;
+    }
+}
+
+
+.card{
+    border-radius: 15px;
+}
+
+.favbutton{
+    margin: 3px;
+}

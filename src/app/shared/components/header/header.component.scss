@@ -1,0 +1,31 @@
+#header {
+    background-color: #5c3cbb !important;
+    color: white !important;
+
+    .navbar-nav .nav-link.active, .navbar-nav .nav-link.show {
+        color: white !important
+    }
+
+    .navbar-nav .nav-link, .navbar-nav .nav-link.show {
+        color: white !important
+    }
+
+
+    .navbar-brand {
+        color: white;
+    }
+}
+
+#heart{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 20px;
+    height: 20px;
+    margin-top: 3px;
+    
+  }
+
+  nav{
+    cursor: grab;
+  }

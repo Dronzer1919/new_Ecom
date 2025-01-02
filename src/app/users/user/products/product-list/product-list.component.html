@@ -1,0 +1,23 @@
+<div class="row">
+    <div class="col-3 pe-0">
+        <product-side-bar (filterValuesChange)="filterValuesChange($event)"></product-side-bar>
+    </div>
+    <div class="col-9 ps-0">
+        <div class="col-5 mx-4 mt-3">
+            <input type="text" [(ngModel)]="searchTerm" placeholder="Search product ..." (input)="onSearchTermChange()" class="form-control">
+        </div>
+
+        <div class="row row-cols-1 row-cols-sm-2  row-cols-md-3 row-cols-lg-4 g-4 px-3 mt-2">
+            <div class="col" *ngFor="let item of filterList ">
+              <div class="card rounded-4">
+                <img class="mobile card-img-top rounded-4" [src]="item && item?.images[0]" (click)="gotoDetails(item)">
+                <div class="card-body px-2">
+                  <h5 class="card-title secondary-color "> {{item.productName | titlecase}}</h5>
+                  <p class="card-text">
+                    <h6>{{item.productPrice}} ₹</h6>
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+</div>

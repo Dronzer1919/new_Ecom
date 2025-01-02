@@ -1,0 +1,49 @@
+<div class="container-fluid m-2">
+    <div class="row row-cols-1 row-cols-md-3 row-cols-lg-5 row-cols-sm-2 g-4">
+        @for( item of allProductList ; track item._id ){
+            <div class="col">
+                <div class="card">
+                    <!-- Adjusted the width and height to maintain aspect ratio -->
+                    <img ngSrc="{{item.image}}" (click)="gotoDetails(item)" alt="img" width="262" height="184" class="product-img">
+                    <div class="card-body pe-0">
+                        <div class="row me-1 pe-2">
+                            <div class="col-11">
+                                <h5>{{item.categoryName}}</h5>
+                            </div>
+                            <div class="col-1 ps-0 pe-2">
+                                <div class="wishlist-icons">
+                                    @if(!item.fav){
+                                        <img ngSrc="../../../../../assets/images/favwhite.svg" width="18" height="20" class="favbutton" (click)="wishlist(item)" alt="fav">
+                                    }
+                                    @if(item.fav){
+                                        <img ngSrc="./../../../../../assets/fav_red.png" id="heart" width="18" height="20" class="favbutton" (click)="unwishlist(item)" alt="fav1">
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        @if(item.categoryName !== 'Eggs'){
+                            <div class="text-secondary">
+                                500gm
+                            </div>
+                        }
+                        @if(item.categoryName == 'Eggs'){
+                            <div class="text-secondary">
+                                1 Dozen
+                            </div>
+                        }
+                        <div class="row pe-0 mt-2">
+                            <div class="secondary-color col-7">
+                                Discount upto {{ item.discount }}%
+                            </div>
+                            <div class="buynow col-5">
+                                <div class="btn btn-sm" (click)="gotoCart(item)">
+                                    BUY NOW
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

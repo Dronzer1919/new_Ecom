@@ -1,0 +1,57 @@
+
+.login-Image{
+    background-image: url('./../../../../../assets/loginPage.svg');
+    // background-size: cover;
+    height: 100vh;
+    padding:0;
+    margin:0;
+    background-repeat: no-repeat;
+}
+
+.height {
+    height: 75vh;
+}
+
+td{
+    width: 25rem;
+}
+
+.card{
+    // background: linear-gradient(90deg, rgb(21, 49, 73) 0%, rgb(79, 96, 56) 100%);
+    background: linear-gradient(90deg, #5c3cbb , #997cf0);
+
+}
+
+.form-label,h3,p,a{
+    color: #d8d8d8;
+}
+
+u{
+    cursor: grab;
+}
+
+
+@media screen and (max-width:991px) {
+
+    .body{
+        background-image: none;
+        background: linear-gradient(90deg, rgb(21, 49, 73) 0%, rgb(79, 96, 56) 100%);
+    }
+
+    .card{
+        background: white;
+    }
+    .form-label,h3,p{
+        color: black;
+    }
+
+}
+
+
+
+
+
+
+
+
+

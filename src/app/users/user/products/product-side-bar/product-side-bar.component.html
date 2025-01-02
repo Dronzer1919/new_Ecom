@@ -1,0 +1,24 @@
+<div class="accordion px-2 mt-2" >
+    <h4>Filter Item <i class="bi bi-funnel" height="5px"></i></h4>
+    <form [formGroup]="filterItem">
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="acc-one">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                Price Filter 
+                </button>
+            </h2>
+            <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show" aria-labelledby="acc-one">
+                <div class="accordion-body">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <input type="text" formControlName="minPrice"  placeholder="min Price..." class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <input type="text" formControlName="maxPrice" placeholder="max Price..." class="form-control">
+                        </div>
+                    </div> 
+                </div>
+            </div>
+        </div>
+    </form>
+  </div>

@@ -1,0 +1,37 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary" id="header">
+    <div class="container-fluid">
+        <a class="navbar-brand" routerLink="">Chiken Corner</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" (click)="redirectTo('')">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/admin">Categories</a>
+                </li>
+              
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/blog">Blog</a>
+                </li>
+            </ul>
+
+            <div class="d-flex justify-content-between row me-5 login">
+                <div class="col " (click)="redirectTo('wishlist')">
+                    <img ngSrc="./assets/favwhite.svg" id="heart" priority="high" height="50" width="50"   alt="fav">
+                </div>
+                <div class="col" (click)="redirectTo('login')">
+                    login
+                </div>
+                <div class="col" (click)="redirectTo('register')">
+                    register
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</nav>
+

@@ -1,1 +1,296 @@
 /* You can add global styles to this file, and also import other style files */
+
+
+
+ 
+$white-color: #ffffff;
+$black-color: #000000;
+
+$primary: #E25427;
+$primary-light: #FCEDE9;
+$secondary: #13173D;
+$secondary-light: #F5F6FF;
+$card-bg-clr : #f7f8ff;
+$label-color: #6a6a6a;
+$disabled: #abb3b5;
+$input-field: #ced4da;
+$card-bg: rgb(182, 182, 182);
+$danger: #e3161e;
+$success: #00b500;
+$error-message: #ff7f00;
+$failed: #be3232;
+$completed: #0bbc8a;
+$ribbon-color : #f4e5c4;
+$icon-bg: #f4e5c4;
+$ribbon-font-color: #323031;
+$in-progress: #d1a71b;
+$not-initiated: #e5801a;
+$border-light: #d25e37;
+
+// $box-shadow: lighten($black-color, 86%);
+// $border-color: lighten($black-color, 86%);
+$left-border: $border-light ;
+$left-border: $border-light ;
+
+$accordion-button-focus-border-color: $primary-light;
+$accordion-button-focus-box-shadow: $primary-light;
+$container-color: #fff1ef;
+$border : #cbc8c8;
+$warning-text: #be3232;
+$div-color: #f7f8ff;
+$green-color: #118b0c;
+
+$ep-primary : #131640;
+$ep-secondary: #ea652b;
+$strip-clr : #f1f3ff;
+$popup-header: #9da4cc;
+$ep-lighten-blue: #233468;
+$ep-peach-color: #fce8e0;
+$ep-disabled: lightn(#ea652b, 0%);
+$data-table-hover: #ccd4ff;
+$ep-card-body: #a0aae473;
+
+$pre-login-border: #cea63e;
+$pre-login-bg: #fdf5e0;
+$file-login-border: #b685f8;
+$file-login-bg: #f2e8fe;
+$rejected-case-border: #ce818b;
+$rejected-case-bg: #fae3e6;
+$sales-border: #6fd466;
+$sales-bg: #e2fbe8;
+$ops-stage-border: #0195ff;
+$ops-stage-bg: #d5ebfe;
+$disbursed-case-border: #c656af;
+$disbursed-case-bg: #ffe6fa;
+$ellipse1-bg: #ebf7ff;
+$ellipse2-bg: #ebf9f5;
+
+
+
+
+
+
+
+
+
+
+.ngx-datatable.fixed-header .datatable-header .datatable-header-inner .datatable-header-cell {
+    background-color: #5c3cbb !important;
+    color: $white-color;
+    display: flex !important;
+    align-items: center !important;
+}
+
+
+
+ngx-datatable {
+    box-shadow: none !important;
+    border: 1px solid $disabled;
+    border-radius: 10px;
+
+    &.material.striped .datatable-row-odd {
+        background-color: $strip-clr !important;
+    }
+
+    datatable-header {
+        border-radius: 6px;
+        width: auto !important;
+    }
+
+    datatable-body {
+        border-radius: 6px;
+        width: auto !important;
+
+        datatable-body-cell {
+            padding-left: 10px !important;
+        }
+    }
+
+
+
+    .page-count {
+        height: fit-content !important;
+        line-height: inherit !important;
+        color: $ep-secondary;
+        font-family: Lato-Regular, sans-serif;
+        display: contents;
+        text-transform: capitalize;
+    }
+
+    li.active a {
+        background-color: rgba(158, 158, 158, 0.2);
+        font-weight: bold;
+        color: $ep-secondary !important;
+        font-family: Lato-Bold, sans-serif;
+    }
+
+
+
+    &.fixed-header .datatable-header .datatable-header-inner .datatable-header-cell {
+        padding: 5px 0px 5px 10px !important;
+
+    }
+}
+
+
+
+
+
+
+@media screen and (max-width:768px) {
+    .bg-gradient-left-top {
+        left: -100px;
+    }
+
+    .document-breadcrum-header {
+        .document-header {
+            #doc-app-header {
+                li {
+                    max-width: 100%;
+
+                    p {
+                        &:first-child {
+                            &:first-child::after {
+                                position: absolute;
+                                display: block;
+                                content: '';
+                                width: 11px;
+                                height: 1px;
+                                background: $white-color;
+                                right: 10px;
+                                top: 50%;
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+    }
+}
+
+@media(max-width:991px) {
+    ngx-datatable {
+        &.fixed-header .datatable-header .datatable-header-inner .datatable-header-cell {
+            padding: 5px 0px 5px 10px !important;
+        }
+    }
+}
+
+.ngx-datatable.material:not(.cell-selection) .datatable-body-row:hover,
+.ngx-datatable.material:not(.cell-selection) .datatable-body-row:hover .datatable-row-group {
+    background-color: $data-table-hover !important;
+    transition-property: background;
+    transition-duration: 0.3s;
+    transition-timing-function: linear;
+}
+
+.card {
+    border-color: $disabled;
+    box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.09)
+}
+
+
+
+
+datatable-scroller {
+    width: 100% !important;
+}
+
+.ngx-datatable.scroll-vertical {
+    height: 70vh;
+}
+
+.ngx-datatable.material .datatable-header .datatable-header-cell {
+    padding: 0.5rem 0.5rem;
+}
+
+.ngx-datatable.material .datatable-body .datatable-body-row .datatable-body-cell {
+    padding: 0.5rem 0.5rem;
+}
+
+.text-danger{
+    color: red !important;
+}
+
+
+// .ngx-toastr {
+//     width: 800px !important;  // Specify toastr-dialog width for all devices
+//   }
+
+
+//   .toast-top-center { 
+//     top: 12px; 
+//     left: 50%; 
+//     margin-left: -150px; 
+// } 
+
+@media screen and (max-width: 991px) {
+    .table-section {
+
+        .ngx-datatable .datatable-body .datatable-body-row,
+        .ngx-datatable.material .datatable-body .datatable-body-row .datatable-body-cell {
+            width: 100% !important;
+        }
+
+        .datatable-body-cell-label {
+            display: flex;
+            flex-direction: column;
+
+            >div {
+                display: flex;
+                flex-direction: row;
+                flex-basis: 100%;
+                max-width: 100%;
+
+                span {
+                    flex-basis: 50%;
+                    max-width: 50%;
+                    word-wrap: break-word;
+
+                    &:last-child {
+                        text-align: right;
+                    }
+
+                    >span {
+                        display: inline-block !important;
+                    }
+                }
+            }
+        }
+    }
+}
+
+u{
+    cursor: grab;
+}
+
+
+
+
+input::-webkit-input-placeholder {
+    opacity: 0.5 !important;
+    font-size: 0.875rem;
+}
+
+.text-color {
+    color: $primary;
+}
+
+.ngx-datatable {
+    .datatable-footer {
+        .datatable-footer-inner {
+            color: $primary;
+            padding-left: 0 !important;
+            height: 35px !important;
+        }
+    }
+
+}
+
+
+.secondary-color{
+    font-size: medium;
+    color: #f95b01 !important;
+    font-weight: bold;
+}

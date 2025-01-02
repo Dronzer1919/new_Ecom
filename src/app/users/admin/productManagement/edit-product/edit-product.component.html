@@ -1,0 +1,121 @@
+<div class="row">
+
+    <div class="ps-4 table-section">
+            <ngx-datatable #datatable class="material striped mb-4 p-2" [columnMode]="'force'" [headerHeight]="30"
+                [rowHeight]="'auto'" [scrollbarH]="true"   [rows]='allProductList'>
+                <ngx-datatable-column name="Product Image" [width]="50" [sortable]="true" [resizeable]="true">
+                    <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+                            <img class="mobile"    ngSrc="{{row.image}}" width="40" height="20" >
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Product Name" [width]="100" [sortable]="true" [resizeable]="true">
+                    <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+                        <div class="text-color">
+                                {{ row.categoryName }}
+                        </div>
+                    </ng-template>
+                </ngx-datatable-column>
+                
+
+                <ngx-datatable-column name="Discount" [width]="50" [sortable]="true" [resizeable]="true">
+                    <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+                        <div class="ps-3">
+                            {{ row.discount }} %
+                        </div>
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Weight" [width]="50" [sortable]="true" [resizeable]="true">
+                    <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+                        500 gm
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Created on" [width]="180" [sortable]="true" [resizeable]="true">
+                    <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+                        {{ row.created_on | date: 'dd/MM/yyyy  hh:mm a' }}
+                    </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="Action" [width]="180" [sortable]="true" [resizeable]="true">
+                    <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                            <button class="btn btn-outline-primary me-md-2 px-2 py-1" type="button" (click)="editProduct(row)" data-bs-toggle="modal" data-bs-target="#staticBackdrop"><i class="bi bi-pencil-square"></i></button>
+                            <button class="btn btn-outline-primary px-2 py-1" type="button" (click)="deleteProduct(row._id)" ><i class="bi bi-trash-fill"></i></button>
+                        </div>
+                        <!-- {{ row.created_on | date: 'dd/MM/yyyy  hh:mm a' }} -->
+                    </ng-template>
+                </ngx-datatable-column>
+
+                <!-- <ngx-datatable-column name="Delete" [width]="180" [sortable]="true" [resizeable]="true">
+                    <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+                        <div (click)="removeFromWishList(row.id)">
+                            <u>
+                                Remove Form Wishlist
+                            </u>
+                        </div>
+                        
+                    </ng-template>
+                </ngx-datatable-column> -->
+            </ngx-datatable>
+       
+
+    </div>
+
+</div>
+
+
+
+
+<div class="modal fade " id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" #staticBackdrop >
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Edit Product</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body px-3 py-0">
+            <form [formGroup]="editProductForm">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="productName" class="form-label">Product Category</label>
+                        <!-- <select class="form-select" aria-label="Default select example" 
+                            formControlName="categoryName">
+                            <option selected>please Select</option>
+                            <option value="1">Fish</option>
+                            <option value="2">Two</option>
+                            <option value="3">Three</option>
+                        </select> -->
+                        <input type="text" class="form-control" id="productName" formControlName="categoryName" placeholder="Enter Product Category">
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="description" class="form-label">Description</label>
+                        <input type="text" class="form-control" id="description" formControlName="description" placeholder="Enter Product Description">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="discount" class="form-label">Discount</label>
+                        <input type="text" class="form-control" id="discount" formControlName="discount"  placeholder="Enter Product Discount">
+                    </div>
+                </div>
+                <div class="row my-3">
+                    <!-- <div class="col-md-4">
+                        <label for="productName" class="form-label">Product Weight</label>
+                        <input type="text" class="form-control" id="productName" formControlName="productWeight">
+                    </div> -->
+                    <div class="col-md-8">
+                        <label for="formFile" class="form-label">Choose Product File</label>
+                        <input type="file" class="form-control" type="file" id="formFile" formControlName="img" 
+                            accept="image/*" multiple (change)="onFileChange($event)">
+                    </div>
+                </div>
+            </form>
+                
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary " (click)="submitForm()" >
+                save
+            </button>
+        </div>
+       
+      </div>
+    </div>
+</div>

@@ -1,0 +1,142 @@
+<div class="row m-2" *ngIf="addProductCategory">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header text-center">
+                Add Poduct Category
+            </div>
+            <div class="card-body pb-0">
+                <form [formGroup]="addProduct">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="productName" class="form-label">Product Category</label>
+                            
+                            <input type="text" class="form-control" id="productName" formControlName="categoryName" placeholder="Enter Product Category">
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="description" class="form-label">Description</label>
+                            <input type="text" class="form-control" id="description" formControlName="description" placeholder="Enter Product Description">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="discount" class="form-label">Discount</label>
+                            <input type="text" class="form-control" id="discount" formControlName="discount"  placeholder="Enter Product Discount">
+                        </div>
+                    </div>
+                    <div class="row my-3">
+                        <div class="col-md-8">
+                            <label for="formFile" class="form-label">Choose Product File</label>
+                            <input type="file" class="form-control" type="file" id="formFile" formControlName="img" 
+                                accept="image/*" multiple (change)="onFileChange($event)">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="text-end mx-3 my-2 ">
+                <button class="btn btn-primary " (click)="submitForm()">
+                    save
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4" *ngIf="isloaded">
+        <app-preview-img [selectedIMG]="imageChangedEvent"></app-preview-img>
+    </div>
+    
+</div>
+
+
+<div class="row m-2" >
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header text-center">
+                Preview Image
+            </div>
+            <div *ngIf="imagePreviewUrls.length > 0">
+                <div class="card-body">
+                    <div>
+                        <img [src]="imagePreviewUrls[currentImageIndex]" class="img-fluid" />
+                    </div>
+                </div>
+                <!-- <div class="card-footer text-center">
+                    <button (click)="prevImage()" class="btn btn-primary mx-2" [disabled]="imagePreviewUrls.length <= 1"><i class="bi bi-chevron-double-left"></i></button>
+                    <button (click)="nextImage()" class="btn btn-primary mx-2" [disabled]="imagePreviewUrls.length <= 1"><i class="bi bi-chevron-double-right"></i></button>
+                    <button  type="button" class="btn btn-primary mx-2" data-bs-toggle="modal" data-bs-target="#staticBackdrop"><i class="bi bi-pencil-square"></i></button>
+                    <button (click)="delete(currentImageIndex)" class="btn btn-primary mx-2"><i class="bi bi-trash3-fill"></i></button>
+                </div> -->
+            </div>
+            <div *ngIf="!imagePreviewUrls.length" class="p-3 text-center">
+                No Images Selected
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8" >
+        <div class="card">
+            <div class="card-header text-center">
+                Add Product Type
+            </div>
+            <div class="card-body pb-0">
+                <form [formGroup]="addType">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="categoryName" class="form-label">Product Category</label>
+                            <select class="form-select" aria-label="Default select example" 
+                                formControlName="categoryName">
+                                <option selected *ngFor="let item of allProductList" [value]="item._id">{{item.categoryName}}</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="productName" class="form-label">productName</label>
+                            <input type="text" class="form-control" id="productName" formControlName="productName" placeholder="Enter productName">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="productType" class="form-label">productType</label>
+                            <input type="text" class="form-control" id="productType" formControlName="productType"  placeholder="Enter Product Discount">
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-4">
+                            <label for="productPrice" class="form-label">Product Price</label>
+                            <input type="text" class="form-control" id="productPrice" formControlName="productPrice" placeholder="Enter categoryName">
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="productQuantity" class="form-label">productQuantity</label>
+                            <input type="text" class="form-control" id="productQuantity" formControlName="productQuantity" placeholder="Enter productName">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="productWeight" class="form-label">productWeight</label>
+                            <input type="text" class="form-control" id="productWeight" formControlName="productWeight"  placeholder="Enter Product Discount">
+                        </div>
+                    </div>
+                    <div class="row my-3">
+                       
+                        <div class="col-md-8">
+                            <label for="formFile" class="form-label">Choose Product File</label>
+                            <input type="file" class="form-control" type="file" id="formFile" formControlName="img" 
+                                accept="image/*" multiple (change)="onFileSelected($event)">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="text-end mx-3 my-2 ">
+                <button class="btn btn-primary "  (click)="addProductType()">
+                    save
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<!-- image edit  -->
+
+
+  <!-- <div>
+    <h1 (click)="changeFruit()">Click to Change Fruit: {{ fruits[currentFruitIndex] }}</h1>
+  </div> -->
+ 
+<!-- image edit  -->
