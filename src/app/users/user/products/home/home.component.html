@@ -1,49 +1,384 @@
-<div class="container-fluid m-2">
-    <div class="row row-cols-1 row-cols-md-3 row-cols-lg-5 row-cols-sm-2 g-4">
-        @for( item of allProductList ; track item._id ){
-            <div class="col">
-                <div class="card">
-                    <!-- Adjusted the width and height to maintain aspect ratio -->
-                    <img ngSrc="{{item.image}}" (click)="gotoDetails(item)" alt="img" width="262" height="184" class="product-img">
-                    <div class="card-body pe-0">
-                        <div class="row me-1 pe-2">
-                            <div class="col-11">
-                                <h5>{{item.categoryName}}</h5>
-                            </div>
-                            <div class="col-1 ps-0 pe-2">
-                                <div class="wishlist-icons">
-                                    @if(!item.fav){
-                                        <img ngSrc="../../../../../assets/images/favwhite.svg" width="18" height="20" class="favbutton" (click)="wishlist(item)" alt="fav">
-                                    }
-                                    @if(item.fav){
-                                        <img ngSrc="./../../../../../assets/fav_red.png" id="heart" width="18" height="20" class="favbutton" (click)="unwishlist(item)" alt="fav1">
-                                    }
-                                </div>
-                            </div>
-                        </div>
-                        @if(item.categoryName !== 'Eggs'){
-                            <div class="text-secondary">
-                                500gm
-                            </div>
-                        }
-                        @if(item.categoryName == 'Eggs'){
-                            <div class="text-secondary">
-                                1 Dozen
-                            </div>
-                        }
-                        <div class="row pe-0 mt-2">
-                            <div class="secondary-color col-7">
-                                Discount upto {{ item.discount }}%
-                            </div>
-                            <div class="buynow col-5">
-                                <div class="btn btn-sm" (click)="gotoCart(item)">
-                                    BUY NOW
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        }
+<!-- Header Section -->
+<header class="bg-light py-2">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-md-6">
+        <span class="text-muted small">Free shipping on orders over £50</span>
+      </div>
+      <div class="col-md-6 text-end">
+        <a href="#" class="text-muted me-3 small">Support</a>
+        <a href="#" class="text-muted small">Track Order</a>
+      </div>
     </div>
+  </div>
+</header>
+
+<!-- Main Navigation -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+  <div class="container">
+    <a class="navbar-brand fw-bold fs-3" href="#">FurniShop</a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item" *ngFor="let link of navLinks">
+          <a class="nav-link" href="#">{{ link }}</a>
+        </li>
+      </ul>
+
+      <div class="d-flex align-items-center">
+        <a href="#" class="text-dark me-3">
+          <i class="bi bi-search fs-5"></i>
+        </a>
+        <a href="#" class="text-dark me-3">
+          <i class="bi bi-person fs-5"></i>
+        </a>
+        <a href="#" class="text-dark position-relative">
+          <i class="bi bi-bag fs-5"></i>
+          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger small">
+            3
+          </span>
+        </a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero Section -->
+<section class="hero-section bg-light py-5" *ngIf="heroData">
+  <div class="container">
+    <div class="row align-items-center">
+
+      <div class="col-lg-12">
+  <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000" *ngIf="heroData.banners && heroData.banners.length">
+          <div class="carousel-indicators">
+            <button *ngFor="let banner of heroData.banners; let i = index"
+                    type="button"
+                    data-bs-target="#heroCarousel"
+                    [attr.data-bs-slide-to]="i"
+                    [class.active]="i === 0"
+                    aria-current="i === 0 ? 'true' : null"
+                    [attr.aria-label]="'Slide ' + (i + 1)"></button>
+          </div>
+          <div class="carousel-inner">
+            <div *ngFor="let banner of heroData.banners; let i = index" class="carousel-item" [class.active]="i === 0">
+              <div class="row justify-content-center">
+                <div class="col-md-8 col-lg-6">
+                  <div class="card border-0 shadow-lg text-center">
+                    <img [src]="banner" [alt]="heroData.title" class="card-img-top"
+                         style="height:250px; object-fit:cover;"
+                         onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAwIiBoZWlnaHQ9IjI1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZGRkIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIyMCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkhlcm8gSW1hZ2U8L3RleHQ+PC9zdmc+'">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+            <span aria-hidden="true"><i class="bi bi-arrow-left-circle-fill fs-2"></i></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+            <span aria-hidden="true"><i class="bi bi-arrow-right-circle-fill fs-2"></i></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Loading State for Hero -->
+<section class="hero-section bg-light py-5" *ngIf="isLoading">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-6">
+        <div class="placeholder-glow">
+          <span class="placeholder col-3 mb-2"></span>
+          <h1 class="placeholder-glow"><span class="placeholder col-8"></span></h1>
+          <p class="placeholder-glow"><span class="placeholder col-12"></span><span class="placeholder col-6"></span></p>
+          <div class="d-flex gap-3">
+            <span class="placeholder col-3 btn btn-lg"></span>
+            <span class="placeholder col-3 btn btn-lg"></span>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="placeholder" style="height: 400px; background: #dee2e6;"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Dynamic Promo Carousel Section -->
+<section class="py-5" *ngIf="promoCards.length > 0">
+  <div class="container">
+    <h2 class="text-center mb-5">Special Offers</h2>
+
+    <!-- Carousel for larger screens -->
+    <div id="promoCarousel" class="carousel slide d-none d-md-block" data-bs-ride="carousel">
+      <div class="carousel-indicators">
+        <button
+          *ngFor="let promo of promoCards; let i = index"
+          type="button"
+          data-bs-target="#promoCarousel"
+          [attr.data-bs-slide-to]="i"
+          [class.active]="i === 0">
+        </button>
+      </div>
+
+      <div class="carousel-inner">
+        <div
+          *ngFor="let promo of promoCards; let i = index"
+          class="carousel-item"
+          [class.active]="i === 0">
+          <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+              <div class="card border-0 shadow-lg text-center">
+                <img [src]="promo.image" class="card-img-top" [alt]="promo.title"
+                     style="height: 300px; object-fit: cover;"
+                     onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjhmOWZhIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIyMCIgZmlsbD0iIzZjNzU3ZCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPlByb21vPC90ZXh0Pjwvc3ZnPg=='">
+                <div class="card-body py-4">
+                  <h3 class="card-title">{{ promo.title }}</h3>
+                  <div class="d-flex justify-content-center align-items-center mb-3">
+                    <span class="display-6 fw-bold text-danger">£{{ promo.price }}</span>
+                  </div>
+                  <button class="btn btn-dark btn-lg">Shop Collection</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button class="carousel-control-prev" type="button" data-bs-target="#promoCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#promoCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+
+    <!-- Grid for mobile -->
+    <div class="d-md-none">
+      <div class="row g-4">
+        <div class="col-12" *ngFor="let promo of promoCards.slice(0, 3)">
+          <div class="card h-100 border-0 shadow-sm">
+            <img [src]="promo.image" class="card-img-top" [alt]="promo.title" style="height: 200px; object-fit: cover;"
+                 onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjhmOWZhIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzZjNzU3ZCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlPC90ZXh0Pjwvc3ZnPg=='">
+            <div class="card-body">
+              <h5 class="card-title">{{ promo.title }}</h5>
+              <div class="d-flex justify-content-between align-items-center">
+                <span class="h5 mb-0 text-danger">£{{ promo.price }}</span>
+                <button class="btn btn-outline-dark btn-sm">View</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Loading State for Promos -->
+<section class="py-5" *ngIf="isLoading">
+  <div class="container">
+    <h2 class="text-center mb-5">Special Offers</h2>
+    <div class="row g-4">
+      <div class="col-md-4" *ngFor="let i of [1,2,3]">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="placeholder" style="height: 200px; background: #dee2e6;"></div>
+          <div class="card-body">
+            <div class="placeholder-glow">
+              <span class="placeholder col-7"></span>
+              <div class="d-flex justify-content-between align-items-center mt-2">
+                <span class="placeholder col-4"></span>
+                <span class="placeholder col-3"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Featured Products Section -->
+<section class="py-5 bg-light" *ngIf="featuredProducts.length > 0">
+  <div class="container">
+    <h2 class="text-center mb-5">Featured Products</h2>
+    <div class="row g-4">
+      <div class="col-lg-3 col-md-6" *ngFor="let product of featuredProducts.slice(0, 4)">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="position-relative">
+            <img [src]="getProductImage(product)" class="card-img-top" [alt]="product.title"
+                 style="height: 250px; object-fit: cover;"
+                 onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjI1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjhmOWZhIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzZjNzU3ZCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPlByb2R1Y3Q8L3RleHQ+PC9zdmc+'">
+            <span class="badge bg-danger position-absolute top-0 end-0 m-2" *ngIf="product.badge">{{ product.badge }}</span>
+          </div>
+          <div class="card-body">
+            <h6 class="card-title">{{ product.title }}</h6>
+            <p class="card-text text-muted small" *ngIf="product.subtitle">{{ product.subtitle }}</p>
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="fw-bold">£{{ product.price }}</span>
+              <div class="text-warning small" *ngIf="product.rating">
+                <span *ngFor="let star of getStarArray(product.rating)">★</span>
+                <span *ngFor="let star of getStarArray(5 - product.rating)" class="text-muted">☆</span>
+              </div>
+            </div>
+            <button class="btn btn-outline-dark w-100 mt-2">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Top Rated Products Section -->
+<section class="py-5" *ngIf="topRatedProducts.length > 0">
+  <div class="container">
+    <h2 class="text-center mb-5">Top Rated Products</h2>
+    <div class="row g-4">
+      <div class="col-lg-3 col-md-6" *ngFor="let product of topRatedProducts.slice(0, 4)">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="position-relative">
+            <img [src]="getProductImage(product)" class="card-img-top" [alt]="product.title"
+                 style="height: 250px; object-fit: cover;"
+                 onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjI1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjhmOWZhIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzZjNzU3ZCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPlByb2R1Y3Q8L3RleHQ+PC9zdmc+'">
+            <div class="position-absolute top-0 start-0 m-2">
+              <span class="badge bg-warning">Top Rated</span>
+            </div>
+          </div>
+          <div class="card-body">
+            <h6 class="card-title">{{ product.title }}</h6>
+            <p class="card-text text-muted small" *ngIf="product.subtitle">{{ product.subtitle }}</p>
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="fw-bold">£{{ product.price }}</span>
+              <div class="text-warning small" *ngIf="product.rating">
+                <span *ngFor="let star of getStarArray(product.rating)">★</span>
+                <span *ngFor="let star of getStarArray(5 - product.rating)" class="text-muted">☆</span>
+              </div>
+            </div>
+            <button class="btn btn-outline-dark w-100 mt-2">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Blog Section -->
+<section class="py-5 bg-light" *ngIf="blogCards.length > 0">
+  <div class="container">
+    <h2 class="text-center mb-5">Latest from Our Blog</h2>
+    <div class="row g-4">
+      <div class="col-md-4" *ngFor="let blog of blogCards.slice(0, 3)">
+        <div class="card h-100 border-0 shadow-sm">
+          <img [src]="blog.image" class="card-img-top" [alt]="blog.title" style="height: 200px; object-fit: cover;"
+               onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjhmOWZhIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzZjNzU3ZCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkJsb2c8L3RleHQ+PC9zdmc+'">
+          <div class="card-body">
+            <h5 class="card-title">{{ blog.title }}</h5>
+            <p class="card-text text-muted">{{ blog.excerpt }}</p>
+            <small class="text-muted">{{ formatDate(blog.date) }}</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Newsletter Section -->
+<section class="py-5 bg-dark text-white">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8 text-center">
+        <h3 class="mb-3">Stay Updated</h3>
+        <p class="mb-4">Get the latest updates on new products and special offers.</p>
+        <form class="row g-3 justify-content-center">
+          <div class="col-md-6">
+            <input type="email" class="form-control" placeholder="Enter your email">
+          </div>
+          <div class="col-auto">
+            <button type="submit" class="btn btn-light">Subscribe</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-dark text-light py-5">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4 mb-4">
+        <h5>FurniShop</h5>
+        <p class="text-muted">Your premier destination for modern furniture and home decor.</p>
+        <div class="d-flex gap-3">
+          <a href="#" class="text-light"><i class="bi bi-facebook"></i></a>
+          <a href="#" class="text-light"><i class="bi bi-twitter"></i></a>
+          <a href="#" class="text-light"><i class="bi bi-instagram"></i></a>
+        </div>
+      </div>
+      <div class="col-md-2 mb-4">
+        <h6>Quick Links</h6>
+        <ul class="list-unstyled">
+          <li><a href="#" class="text-muted">About</a></li>
+          <li><a href="#" class="text-muted">Products</a></li>
+          <li><a href="#" class="text-muted">Blog</a></li>
+          <li><a href="#" class="text-muted">Contact</a></li>
+        </ul>
+      </div>
+      <div class="col-md-2 mb-4">
+        <h6>Categories</h6>
+        <ul class="list-unstyled">
+          <li><a href="#" class="text-muted">Furniture</a></li>
+          <li><a href="#" class="text-muted">Lighting</a></li>
+          <li><a href="#" class="text-muted">Accessories</a></li>
+          <li><a href="#" class="text-muted">Decor</a></li>
+        </ul>
+      </div>
+      <div class="col-md-4 mb-4">
+        <h6>Contact Info</h6>
+        <p class="text-muted mb-1">
+          <i class="bi bi-geo-alt me-2"></i>
+          123 Furniture Street, Design City
+        </p>
+        <p class="text-muted mb-1">
+          <i class="bi bi-phone me-2"></i>
+          +44 123 456 7890
+        </p>
+        <p class="text-muted">
+          <i class="bi bi-envelope me-2"></i>
+          info&#64;furnishop.com
+        </p>
+      </div>
+    </div>
+    <hr class="my-4">
+    <div class="row align-items-center">
+      <div class="col-md-6">
+        <p class="text-muted mb-0">&copy; 2024 FurniShop. All rights reserved.</p>
+      </div>
+      <div class="col-md-6 text-end">
+        <a href="/admin" class="text-muted small me-3">Admin Panel</a>
+        <a href="#" class="text-muted small me-3">Privacy Policy</a>
+        <a href="#" class="text-muted small">Terms of Service</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Loading Overlay -->
+<div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center bg-white"
+     style="z-index: 9999;" *ngIf="isLoading">
+  <div class="text-center">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-3 text-muted">Loading homepage content...</p>
+  </div>
 </div>

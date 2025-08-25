@@ -1,24 +1,117 @@
-<div class="accordion px-2 mt-2" >
-    <h4>Filter Item <i class="bi bi-funnel" height="5px"></i></h4>
+<div class="accordion px-2 mt-2">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4>Filter Products <i class="bi bi-funnel"></i></h4>
+        <button type="button" class="btn btn-outline-secondary btn-sm" (click)="clearFilters()">
+            <i class="bi bi-arrow-clockwise me-1"></i>Clear
+        </button>
+    </div>
+    
     <form [formGroup]="filterItem">
-        <div class="accordion-item">
-            <h2 class="accordion-header" id="acc-one">
-                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
-                Price Filter 
+        <!-- Price Filter -->
+        <div class="accordion-item mb-3">
+            <h2 class="accordion-header" id="acc-price">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" 
+                        data-bs-target="#panelsStayOpen-collapsePrice" aria-expanded="true" 
+                        aria-controls="panelsStayOpen-collapsePrice">
+                    <i class="bi bi-currency-dollar me-2"></i>Price Range 
                 </button>
             </h2>
-            <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show" aria-labelledby="acc-one">
+            <div id="panelsStayOpen-collapsePrice" class="accordion-collapse collapse show" 
+                 aria-labelledby="acc-price">
                 <div class="accordion-body">
-                    <div class="row g-4">
-                        <div class="col-md-6">
-                            <input type="text" formControlName="minPrice"  placeholder="min Price..." class="form-control">
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <label class="form-label small">Min Price</label>
+                            <input type="number" formControlName="minPrice" placeholder="₹0" 
+                                   class="form-control form-control-sm">
                         </div>
-                        <div class="col-md-6">
-                            <input type="text" formControlName="maxPrice" placeholder="max Price..." class="form-control">
+                        <div class="col-6">
+                            <label class="form-label small">Max Price</label>
+                            <input type="number" formControlName="maxPrice" placeholder="₹10000" 
+                                   class="form-control form-control-sm">
                         </div>
                     </div> 
                 </div>
             </div>
         </div>
+
+        <!-- Product Features Filter -->
+        <div class="accordion-item mb-3">
+            <h2 class="accordion-header" id="acc-features">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                        data-bs-target="#panelsStayOpen-collapseFeatures" aria-expanded="false" 
+                        aria-controls="panelsStayOpen-collapseFeatures">
+                    <i class="bi bi-star me-2"></i>Product Features
+                </button>
+            </h2>
+            <div id="panelsStayOpen-collapseFeatures" class="accordion-collapse collapse" 
+                 aria-labelledby="acc-features">
+                <div class="accordion-body">
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="checkbox" formControlName="featured" 
+                               id="featuredCheck">
+                        <label class="form-check-label" for="featuredCheck">
+                            <i class="bi bi-gem text-primary me-1"></i>Featured Products
+                        </label>
+                    </div>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="checkbox" formControlName="topRated" 
+                               id="topRatedCheck">
+                        <label class="form-check-label" for="topRatedCheck">
+                            <i class="bi bi-star-fill text-warning me-1"></i>Top Rated (4+ Stars)
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Badges Filter -->
+        <div class="accordion-item mb-3">
+            <h2 class="accordion-header" id="acc-badges">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                        data-bs-target="#panelsStayOpen-collapseBadges" aria-expanded="false" 
+                        aria-controls="panelsStayOpen-collapseBadges">
+                    <i class="bi bi-tags me-2"></i>Product Badges
+                </button>
+            </h2>
+            <div id="panelsStayOpen-collapseBadges" class="accordion-collapse collapse" 
+                 aria-labelledby="acc-badges">
+                <div class="accordion-body">
+                    <select class="form-select form-select-sm" formControlName="badge">
+                        <option value="">All Products</option>
+                        <option value="new">🆕 New Arrivals</option>
+                        <option value="sale">🔥 On Sale</option>
+                        <option value="hot">🌟 Hot Deals</option>
+                        <option value="featured">💎 Featured</option>
+                        <option value="limited">⏰ Limited Edition</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sort Options -->
+        <div class="accordion-item mb-3">
+            <h2 class="accordion-header" id="acc-sort">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                        data-bs-target="#panelsStayOpen-collapseSort" aria-expanded="false" 
+                        aria-controls="panelsStayOpen-collapseSort">
+                    <i class="bi bi-sort-down me-2"></i>Sort By
+                </button>
+            </h2>
+            <div id="panelsStayOpen-collapseSort" class="accordion-collapse collapse" 
+                 aria-labelledby="acc-sort">
+                <div class="accordion-body">
+                    <select class="form-select form-select-sm" formControlName="sortBy">
+                        <option value="default">Default</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="price-high">Price: High to Low</option>
+                        <option value="name-asc">Name: A to Z</option>
+                        <option value="name-desc">Name: Z to A</option>
+                        <option value="rating">Highest Rated</option>
+                        <option value="newest">Newest First</option>
+                    </select>
+                </div>
+            </div>
+        </div>
     </form>
-  </div>
+</div>

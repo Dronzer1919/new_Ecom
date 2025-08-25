@@ -5,8 +5,11 @@ import { AddProductComponent } from './users/admin/productManagement/add-product
 import { EditProductComponent } from './users/admin/productManagement/edit-product/edit-product.component';
 import { LiveLocationTrackerComponent } from './shared/components/live-location-tracker/live-location-tracker.component';
 import { HomeComponent } from './users/user/products/home/home.component';
+import { HomeSimpleComponent } from './users/user/products/home/home-simple.component';
 import { AddUserComponent } from './users/admin/userManagement/add-user/add-user.component';
 import { AdminLoginComponent } from './users/admin/userManagement/admin-login/admin-login.component';
+// import { AddBannerComponent } from './users/user/products/add-banner/add-banner.component';
+import { TestComponent } from './test/test.component';
 
 export const routes: Routes = [
     {
@@ -16,6 +19,10 @@ export const routes: Routes = [
     {
         path: 'home',
         redirectTo: ''
+    },
+    {
+        path: 'home-full',
+        component: HomeComponent // Full home component available at /home-full
     },
     {
         path: 'login',
@@ -30,16 +37,16 @@ export const routes: Routes = [
         loadComponent : () => import('./users/user/products/wishlist/wishlist.component').then(m => m.WishlistComponent)
     },
     {
-        path: 'productCategory/:id', 
+        path: 'productCategory/:id',
         loadComponent: () => import('./users/user/products/product-list/product-list.component').then(m => m.ProductListComponent)
     },
     {
-        path: 'productDetails/:id', 
+        path: 'productDetails/:id',
         loadComponent: () => import('./users/user/products/product-details/product-details.component').then(m => m.ProductDetailsComponent)
     },
     {
         path: 'addToCart/:id',
-        component: AddToCartComponent 
+        component: AddToCartComponent
     },
     {
         path: 'addProduct',
@@ -70,9 +77,21 @@ export const routes: Routes = [
         loadComponent: () => import('./../app/users/admin/dashboard/dashboard/dashboard.component').then(m=> m.DashboardComponent)
     },
     {
+        path: 'sample-dashboard',
+        loadComponent: () => import('./sample-dashboard/sample-dashboard.component').then(m => m.SampleDashboardComponent)
+    },
+    {
+        path: 'product-map',
+        loadComponent: () => import('./product-map/product-map.component').then(m => m.ProductMapComponent)
+    },
+    {
+        path: 'admin',
+        loadChildren: () => import('./admin/admin.routes').then(m => m.adminRoutes)
+    },
+    {
         path: '**',
         component: PageNotFoundComponent
     },
-    
-  
+
+
 ];

@@ -1,0 +1,187 @@
+<!-- Header -->
+<div class="map-header bg-white shadow-sm">
+  <div class="container-fluid">
+    <div class="row align-items-center py-3">
+      <div class="col-md-6">
+        <h4 class="mb-0">🍗 Product Store Locator</h4>
+        <p class="text-muted mb-0">Find our delicious products near you</p>
+      </div>
+      <div class="col-md-6">
+        <div class="d-flex gap-3">
+          <!-- Category Filter -->
+          <select class="form-select form-select-sm"
+                  [value]="selectedCategory"
+                  (change)="onCategoryChange($event)">
+            <option *ngFor="let category of categories" [value]="category.value">
+              {{ category.label }}
+            </option>
+          </select>
+
+          <!-- Availability Filter -->
+          <select class="form-select form-select-sm"
+                  [value]="selectedAvailability"
+                  (change)="onAvailabilityChange($event)">
+            <option *ngFor="let option of availabilityOptions" [value]="option.value">
+              {{ option.label }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Stats Bar -->
+<div class="stats-bar bg-light">
+  <div class="container-fluid">
+    <div class="row py-2">
+      <div class="col-md-3">
+        <div class="stat-item">
+          <span class="stat-number">{{ filteredProducts.length }}</span>
+          <span class="stat-label">Products Shown</span>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="stat-item">
+          <span class="stat-number text-success">{{ getProductsByAvailability('available') }}</span>
+          <span class="stat-label">Available</span>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="stat-item">
+          <span class="stat-number text-warning">{{ getProductsByAvailability('low-stock') }}</span>
+          <span class="stat-label">Low Stock</span>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="stat-item">
+          <span class="stat-number text-danger">{{ getProductsByAvailability('out-of-stock') }}</span>
+          <span class="stat-label">Out of Stock</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Main Content -->
+<div class="map-container">
+  <div class="row g-0 h-100">
+    <!-- Map Section -->
+    <div class="col-md-8">
+      <div id="map" class="map-view"></div>
+    </div>
+
+    <!-- Product List Sidebar -->
+    <div class="col-md-4">
+      <div class="product-sidebar">
+        <div class="sidebar-header">
+          <h5>🛍️ Products ({{ filteredProducts.length }})</h5>
+          <div class="legend">
+            <div class="legend-item">
+              <span class="legend-dot available"></span>
+              <span>Available</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-dot low-stock"></span>
+              <span>Low Stock</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-dot out-of-stock"></span>
+              <span>Out of Stock</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-list">
+          <div class="product-card"
+               *ngFor="let product of filteredProducts"
+               [class.selected]="selectedProduct?.id === product.id"
+               (click)="selectProduct(product.id)">
+
+            <div class="product-header">
+              <div class="product-info">
+                <h6 class="product-name">{{ product.name }}</h6>
+                <p class="product-price">₹{{ product.price }}</p>
+              </div>
+              <span class="availability-badge"
+                    [class]="'badge-' + product.availability">
+                {{ product.availability.replace('-', ' ') }}
+              </span>
+            </div>
+
+            <div class="product-details">
+              <p class="product-description">{{ product.description }}</p>
+              <div class="store-info">
+                <span class="store-icon">📍</span>
+                <span class="store-name">{{ product.store }}</span>
+              </div>
+            </div>
+
+            <div class="product-actions">
+              <button class="btn btn-sm btn-outline-primary me-2"
+                      (click)="selectProduct(product.id); $event.stopPropagation()">
+                View on Map
+              </button>
+              <button class="btn btn-sm btn-primary"
+                      [disabled]="product.availability === 'out-of-stock'"
+                      (click)="addToCart(product); $event.stopPropagation()">
+                Add to Cart
+              </button>
+            </div>
+          </div>
+
+          <!-- Empty State -->
+          <div *ngIf="filteredProducts.length === 0" class="empty-state">
+            <div class="text-center py-4">
+              <h6>No products found</h6>
+              <p class="text-muted">Try adjusting your filters</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Product Details Modal -->
+<div class="product-modal" *ngIf="selectedProduct" (click)="closeProductDetails()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h5>{{ selectedProduct.name }}</h5>
+      <button class="btn-close" (click)="closeProductDetails()">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-md-6">
+          <img [src]="selectedProduct.image"
+               [alt]="selectedProduct.name"
+               class="product-image"
+               (error)="onImageError($event)">
+        </div>
+        <div class="col-md-6">
+          <div class="product-details-full">
+            <p class="price">₹{{ selectedProduct.price }}</p>
+            <p class="category">{{ selectedProduct.category }}</p>
+            <p class="description">{{ selectedProduct.description }}</p>
+            <div class="store-location">
+              <strong>Available at:</strong> {{ selectedProduct.store }}
+            </div>
+            <div class="availability mt-2">
+              <span class="badge" [class]="'bg-' + getAvailabilityColor(selectedProduct.availability)">
+                {{ selectedProduct.availability.replace('-', ' ') }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" (click)="closeProductDetails()">Close</button>
+      <button class="btn btn-primary"
+              [disabled]="selectedProduct.availability === 'out-of-stock'"
+              (click)="addToCart(selectedProduct)">
+        Add to Cart
+      </button>
+    </div>
+  </div>
+</div>

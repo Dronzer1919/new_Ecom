@@ -1,8 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 
+/* Bootstrap is already imported via angular.json */
 
-
- 
 $white-color: #ffffff;
 $black-color: #000000;
 
@@ -219,11 +218,11 @@ datatable-scroller {
 //   }
 
 
-//   .toast-top-center { 
-//     top: 12px; 
-//     left: 50%; 
-//     margin-left: -150px; 
-// } 
+//   .toast-top-center {
+//     top: 12px;
+//     left: 50%;
+//     margin-left: -150px;
+// }
 
 @media screen and (max-width: 991px) {
     .table-section {
