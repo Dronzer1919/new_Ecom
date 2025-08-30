@@ -10,16 +10,16 @@
                 <h3>Welcome Chief ..!!</h3>
                 <p>Create a new Account</p>
               </div>
-  
+
               <form [formGroup]="registrationForm">
                 <div class="mb-2">
                   <label for="email">Email:</label>
-                  <input 
-                    type="email" 
-                    class="form-control" 
-                    formControlName="email" 
-                    id="email" 
-                    required 
+                  <input
+                    type="email"
+                    class="form-control"
+                    formControlName="email"
+                    id="email"
+                    required
                      />
                   <div *ngIf="emailExists" class="text-danger">
                     Email already exists!
@@ -31,11 +31,11 @@
                 <div class="mb-2">
                   <label *ngIf="!isOtpVerified">Password:</label>
                   <label *ngIf="isOtpVerified">New Password:</label>
-                  <input 
-                    type="password" 
-                    class="form-control" 
-                    formControlName="password" 
-                    id="password" 
+                  <input
+                    type="password"
+                    class="form-control"
+                    formControlName="password"
+                    id="password"
                     required />
                 </div>
                 <div class="mb-2">
@@ -55,9 +55,9 @@
                   </div>
                 </div>
                 <div class="text-end my-2">
-                  <button class="btn btn-secondary me-2" routerLink="/auth/">Cancel</button>
+                  <button class="btn btn-gradient-blue me-2" routerLink="/auth/">Cancel</button>
                   <button
-                    class="btn btn-primary"
+                    class="btn btn-gradient-green"
                     (click)="registerUser()"
                     [disabled]="registrationForm.invalid"
                   >
@@ -68,7 +68,7 @@
             </div>
           </div>
         </ng-container>
-  
+
         <!-- Forgot Password Form -->
         <ng-container *ngIf="forGetPassword">
           <div class="card">
@@ -77,7 +77,7 @@
                 <h3>Forgot Password</h3>
                 <h6>Don't Worry Chief ..!!</h6>
               </div>
-  
+
               <form [formGroup]="registrationForm" class="mt-3">
                 <div class="mb-3">
                   <label for="emailInput" class="form-label">Enter Your Email address</label>
@@ -90,7 +90,7 @@
                     required
                   />
                 </div>
-  
+
                 <ng-container *ngIf="isOtpVerified">
                   <div class="mb-2">
                     <label for="newPassword">Password:</label>
@@ -113,9 +113,9 @@
                     </div>
                   </div>
                   <div class="text-end my-2">
-                    <button class="btn btn-secondary me-2" routerLink="/auth/">Cancel</button>
+                    <button class="btn btn-gradient-blue me-2" routerLink="/auth/">Cancel</button>
                     <button
-                      class="btn btn-primary"
+                      class="btn btn-gradient-green"
                       (click)="submitForm()"
                       [disabled]="registrationForm.invalid"
                     >
@@ -123,11 +123,11 @@
                     </button>
                   </div>
                 </ng-container>
-  
+
                 <!-- OTP button -->
                 <div class="text-end" *ngIf="!isOtpVerified">
                   <button
-                    class="btn btn-primary"
+                    class="btn btn-gradient-purple"
                     type="button"
                     data-bs-toggle="modal"
                     data-bs-target="#staticBackdrop"
@@ -144,7 +144,7 @@
       </div>
     </div>
   </div>
-  
+
   <!-- OTP Modal -->
   <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -250,7 +250,7 @@
           <div>
             <button
               type="submit"
-              class="btn btn-primary"
+              class="btn btn-gradient-orange"
               [disabled]="!otpForm.valid"
               (click)="confirmOtp()"
               data-bs-dismiss="modal"
@@ -262,4 +262,3 @@
       </div>
     </div>
   </div>
-  

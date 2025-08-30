@@ -2,6 +2,80 @@
 
 /* Bootstrap is already imported via angular.json */
 
+/* Global Gradient Button Classes */
+:root {
+  --gradient-blue: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --gradient-green: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%);
+  --gradient-orange: linear-gradient(135deg, #ff6a00 0%, #ee0979 100%);
+  --gradient-purple: linear-gradient(135deg, #8360c3 0%, #2ebf91 100%);
+}
+
+/* Gradient button classes for global use */
+.btn-gradient-blue {
+  background: var(--gradient-blue);
+  color: white;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.btn-gradient-blue:hover {
+  background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 0.25rem 0.5rem rgba(102, 126, 234, 0.4);
+}
+
+.btn-gradient-green {
+  background: var(--gradient-green);
+  color: white;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.btn-gradient-green:hover {
+  background: linear-gradient(135deg, #4a9629 0%, #96dab7 100%);
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 0.25rem 0.5rem rgba(86, 171, 47, 0.4);
+}
+
+.btn-gradient-orange {
+  background: var(--gradient-orange);
+  color: white;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.btn-gradient-orange:hover {
+  background: linear-gradient(135deg, #e65e00 0%, #d4086b 100%);
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 0.25rem 0.5rem rgba(255, 106, 0, 0.4);
+}
+
+.btn-gradient-purple {
+  background: var(--gradient-purple);
+  color: white;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.btn-gradient-purple:hover {
+  background: linear-gradient(135deg, #7554b1 0%, #29ab7f 100%);
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 0.25rem 0.5rem rgba(131, 96, 195, 0.4);
+}
+
+/* Small button variants */
+.btn-sm.btn-gradient-blue:hover,
+.btn-sm.btn-gradient-green:hover,
+.btn-sm.btn-gradient-orange:hover,
+.btn-sm.btn-gradient-purple:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0.15rem 0.3rem rgba(0, 0, 0, 0.2);
+}
+
 $white-color: #ffffff;
 $black-color: #000000;
 

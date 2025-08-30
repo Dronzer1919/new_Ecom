@@ -41,17 +41,17 @@ export interface AdminBlog {
   title: string;
   excerpt: string;
   content: string;
-  author: {
+  author?: {
     name: string;
     email: string;
     avatar?: string;
   };
-  image: File | string;
+  image?: File | string;
   tags: string[];
   category: 'design' | 'tips' | 'trends' | 'reviews' | 'lifestyle';
   status: 'draft' | 'published' | 'archived';
   featured: boolean;
-  seo: {
+  seo?: {
     metaTitle?: string;
     metaDescription?: string;
     slug?: string;
@@ -252,15 +252,15 @@ export class AdminApiService {
     formData.append('title', blogData.title);
     formData.append('excerpt', blogData.excerpt);
     formData.append('content', blogData.content);
-    formData.append('authorName', blogData.author.name);
-    formData.append('authorEmail', blogData.author.email);
+    formData.append('authorName', blogData.author?.name || 'Admin');
+    formData.append('authorEmail', blogData.author?.email || 'admin@example.com');
     formData.append('category', blogData.category);
     formData.append('status', blogData.status);
     formData.append('featured', blogData.featured.toString());
     formData.append('tags', blogData.tags.join(','));
-    formData.append('metaTitle', blogData.seo.metaTitle || '');
-    formData.append('metaDescription', blogData.seo.metaDescription || '');
-    formData.append('slug', blogData.seo.slug || '');
+    formData.append('metaTitle', blogData.seo?.metaTitle || '');
+    formData.append('metaDescription', blogData.seo?.metaDescription || '');
+    formData.append('slug', blogData.seo?.slug || '');
 
     if (blogData.image instanceof File) {
       formData.append('image', blogData.image);

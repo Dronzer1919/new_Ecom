@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, AfterViewInit } from '@angular/core';
 import { EcommerceApiService, Product as ApiProduct, BlogPost, PromoCard, HomepageData } from '../../../../services/ecommerce-api.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+
+declare var bootstrap: any;
 
 type Product = {
   id: number;
@@ -21,10 +23,10 @@ type Product = {
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit, OnDestroy {
+export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   private destroy$ = new Subject<void>();
 
-  navLinks = ['Home', 'Products', 'Accessories', 'Lighting', 'Blog', 'Contact'];
+  navLinks = ['Home', 'Products', 'Accessories', 'Contact Us'];
 
   // API-driven data
   heroData: any = null;
@@ -90,10 +92,59 @@ export class HomeComponent implements OnInit, OnDestroy {
     // this.initializeCountdown();
   }
 
+  ngAfterViewInit(): void {
+    // Initialize carousels with proper auto-slide functionality
+    this.initializeCarousels();
+  }
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
     if (this.timer) clearInterval(this.timer);
+  }
+
+  private initializeCarousels(): void {
+    console.log('🎠 Initializing carousels...');
+    // Ensure Bootstrap carousels auto-slide with proper intervals
+    setTimeout(() => {
+      if (typeof bootstrap !== 'undefined') {
+        console.log('🅱️ Bootstrap found, initializing carousels');
+        const heroCarousel = document.getElementById('heroCarousel');
+  // promoCarousel removed from template; skip querying it
+  const featuredCarousel = document.getElementById('featuredProductCarousel');
+        const topRatedCarousel = document.getElementById('topRatedProductCarousel');
+
+        if (heroCarousel) {
+          console.log('🎯 Initializing hero carousel with banners:', this.heroData?.banners?.length || 0);
+          new bootstrap.Carousel(heroCarousel, {
+            interval: 3000,
+            ride: 'carousel'
+          });
+        } else {
+          console.log('❌ Hero carousel element not found');
+        }
+
+  // Promo carousel removed — no initialization needed
+
+        if (featuredCarousel) {
+          console.log('⭐ Initializing featured products carousel');
+          new bootstrap.Carousel(featuredCarousel, {
+            interval: 5000,
+            ride: 'carousel'
+          });
+        }
+
+        if (topRatedCarousel) {
+          console.log('🏆 Initializing top rated products carousel');
+          new bootstrap.Carousel(topRatedCarousel, {
+            interval: 6000,
+            ride: 'carousel'
+          });
+        }
+      } else {
+        console.log('❌ Bootstrap not found');
+      }
+    }, 1000);
   }
 
   // Public method to refresh data (can be called from template)
@@ -111,20 +162,34 @@ export class HomeComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (data: HomepageData) => {
           console.log('✅ Homepage data loaded from API:', data);
+          console.log('🏷️ Raw hero data received:', data.hero);
 
           // Process hero data to ensure proper URLs and banners array
           this.heroData = data.hero;
           if (this.heroData) {
+            console.log('🎯 Processing hero data...');
+            console.log('🔍 Original heroData:', this.heroData);
+
             // If backend returns banners array, use it
             if (Array.isArray(this.heroData.banners)) {
+              console.log('📊 Found banners array:', this.heroData.banners);
               this.heroData.banners = this.heroData.banners.map((url: string) => url.startsWith('http') ? url : `http://localhost:3000${url}`);
+              console.log('🌐 Processed banners with full URLs:', this.heroData.banners);
             } else if (this.heroData.banner) {
+              console.log('📷 Found single banner:', this.heroData.banner);
               // If only a single banner, convert to array
               const bannerUrl = this.heroData.banner.startsWith('http') ? this.heroData.banner : `http://localhost:3000${this.heroData.banner}`;
               this.heroData.banners = [bannerUrl];
+              console.log('🔄 Converted single banner to array:', this.heroData.banners);
             } else {
+              console.log('❌ No banners found in hero data');
               this.heroData.banners = [];
             }
+
+            console.log('✨ Final processed heroData:', this.heroData);
+            console.log('📸 Final banners array length:', this.heroData.banners.length);
+          } else {
+            console.log('⚠️ No hero data received from API');
           }
 
           this.promoCards = data.promoCards || [];
@@ -132,6 +197,12 @@ export class HomeComponent implements OnInit, OnDestroy {
           this.topRatedProducts = data.topRatedProducts || [];
           this.blogCards = data.blogCards || [];
           this.navLinks = data.navLinks || this.navLinks;
+
+          console.log('📦 Promo cards count:', this.promoCards.length);
+          console.log('⭐ Featured products count:', this.featuredProducts.length);
+          console.log('🏆 Top rated products count:', this.topRatedProducts.length);
+          console.log('📝 Blog cards count:', this.blogCards.length);
+
           this.isLoading = false;
         },
         error: (error) => {
@@ -143,6 +214,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   private loadLocalData(): void {
+    console.log('🔄 Loading fallback local data...');
     // Fallback to local data
     this.heroData = {
       banner: '/assets/hero-furniture.jpg',
@@ -154,6 +226,8 @@ export class HomeComponent implements OnInit, OnDestroy {
         { text: 'Learn More', link: '/about', type: 'secondary' }
       ]
     };
+
+    console.log('🏠 Local hero data set:', this.heroData);
 
     this.promoCards = this.localPromoCards.map(item => ({
       id: item.id.toString(),
@@ -188,6 +262,12 @@ export class HomeComponent implements OnInit, OnDestroy {
       date: item.date,
       author: item.author
     }));
+
+    console.log('📊 Local data loaded successfully');
+    console.log('🎯 Local promo cards:', this.promoCards.length);
+    console.log('⭐ Local featured products:', this.featuredProducts.length);
+    console.log('🏆 Local top rated products:', this.topRatedProducts.length);
+    console.log('📝 Local blog cards:', this.blogCards.length);
   }
 
   private initializeCountdown(): void {
@@ -243,5 +323,37 @@ export class HomeComponent implements OnInit, OnDestroy {
       month: 'short',
       day: 'numeric'
     });
+  }
+
+  // Helper method to chunk arrays for carousel slides
+  getProductChunks(products: any[], chunkSize: number): any[][] {
+    const chunks: any[][] = [];
+    for (let i = 0; i < products.length; i += chunkSize) {
+      chunks.push(products.slice(i, i + chunkSize));
+    }
+    return chunks;
+  }
+
+  // Helper method to get blog image URL
+  getBlogImage(blog: any): string {
+    if (blog.image) {
+      if (typeof blog.image === 'string') {
+        // If it's already a full URL, return as is
+        if (blog.image.startsWith('http')) {
+          return blog.image;
+        }
+        // If it's a relative path, construct full URL
+        return `http://localhost:3000${blog.image}`;
+      } else if (blog.image.url) {
+        // If it's an object with url property
+        if (blog.image.url.startsWith('http')) {
+          return blog.image.url;
+        }
+        return `http://localhost:3000${blog.image.url}`;
+      }
+    }
+
+    // Fallback to placeholder or default image
+    return blog.image || 'assets/placeholder-blog.jpg';
   }
 }

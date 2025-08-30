@@ -5,7 +5,6 @@ import { AddProductComponent } from './users/admin/productManagement/add-product
 import { EditProductComponent } from './users/admin/productManagement/edit-product/edit-product.component';
 import { LiveLocationTrackerComponent } from './shared/components/live-location-tracker/live-location-tracker.component';
 import { HomeComponent } from './users/user/products/home/home.component';
-import { HomeSimpleComponent } from './users/user/products/home/home-simple.component';
 import { AddUserComponent } from './users/admin/userManagement/add-user/add-user.component';
 import { AdminLoginComponent } from './users/admin/userManagement/admin-login/admin-login.component';
 // import { AddBannerComponent } from './users/user/products/add-banner/add-banner.component';

@@ -47,11 +47,11 @@
                                 Remove Form Wishlist
                             </u>
                         </div>
-                        
+
                     </ng-template>
                 </ngx-datatable-column>
             </ngx-datatable>
-       
+
 
     </div>
 
@@ -96,12 +96,12 @@
                 </div>
             </div>
             <div class="card-footer bg-white">
-                <button type="button" class="btn btn-outline-warning" style="width: 100%;" routerLink="/kart"
+                <button type="button" class="btn btn-gradient-orange" style="width: 100%;" routerLink="/kart"
                     routerLinkActive="active">BUY NOW</button>
             </div>
         </div>
     </div>
-    
+
 </div>
 
 <div *ngIf="!(this.data && this.data.length > 0)" class="text-center mt-2">
@@ -118,9 +118,9 @@
           <span>{{ item.value.name }}</span>
           <img src="assets/{{ item.value.favorite ? 'fav.svg' : 'fav_red.png' }}" (click)="toggleFavorite(i)" width="20px">
 
-        
+
         </div>
       </div>
     </div>
   </form> -->
-  
+

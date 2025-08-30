@@ -1,8 +1,9 @@
+import { ToastrService } from 'ngx-toastr';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { AdminApiService, AdminPromo } from '../../services/admin-api.service';
+import { PromoManagementService, PromoCode } from '../../../users/admin/promoManagement/promo-management.service';
 
 @Component({
   selector: 'app-promo-management',
@@ -69,7 +70,7 @@ import { AdminApiService, AdminPromo } from '../../services/admin-api.service';
                       <label class="form-label">Discount Value *</label>
                       <div class="input-group">
                         <span class="input-group-text" *ngIf="promoForm.get('discountType')?.value === 'percentage'">%</span>
-                        <span class="input-group-text" *ngIf="promoForm.get('discountType')?.value === 'fixed'">£</span>
+                        <span class="input-group-text" *ngIf="promoForm.get('discountType')?.value === 'fixed'">₹</span>
                         <input type="number" class="form-control" formControlName="discountValue"
                                placeholder="0" step="0.01" min="0">
                       </div>
@@ -90,7 +91,7 @@ import { AdminApiService, AdminPromo } from '../../services/admin-api.service';
                     <div class="mb-3">
                       <label class="form-label">Minimum Order Value</label>
                       <div class="input-group">
-                        <span class="input-group-text">£</span>
+                        <span class="input-group-text">₹</span>
                         <input type="number" class="form-control" formControlName="minOrderValue"
                                placeholder="0.00" step="0.01" min="0">
                       </div>
@@ -292,7 +293,7 @@ import { AdminApiService, AdminPromo } from '../../services/admin-api.service';
                       {{ formatDiscount(promo) }}
                     </span>
                     <div class="small text-muted" *ngIf="promo.minOrderValue">
-                      Min: £{{ promo.minOrderValue }}
+                      Min: ₹{{ promo.minOrderValue }}
                     </div>
                   </td>
                   <td>
@@ -390,7 +391,8 @@ export class PromoManagementComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private adminApiService: AdminApiService
+    private promoManagementService: PromoManagementService,
+    private toastr: ToastrService
   ) {
     this.promoForm = this.createPromoForm();
   }
@@ -435,13 +437,14 @@ export class PromoManagementComponent implements OnInit {
 
   loadPromos(): void {
     this.isLoading = true;
-    this.adminApiService.getAllPromos().subscribe({
-      next: (response) => {
+    this.promoManagementService.getAllPromos().subscribe({
+      next: (response: any) => {
         this.promos = response.data || [];
         this.isLoading = false;
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error('Error loading promos:', error);
+        this.toastr.error('Failed to load promos');
         this.isLoading = false;
       }
     });
@@ -469,26 +472,47 @@ export class PromoManagementComponent implements OnInit {
     if (this.promoForm.valid) {
       const formData = this.promoForm.value;
 
-      const promoData: AdminPromo = {
-        ...formData,
-        image: this.selectedImage?.file
+      const promoData: PromoCode = {
+        title: formData.title,
+        subtitle: formData.subtitle,
+        description: formData.description,
+        discountType: formData.discountType,
+        discountValue: formData.discountValue || 0,
+        code: formData.code,
+        minOrderValue: formData.minOrderValue || 0,
+        usageLimit: formData.usageLimit || 0,
+        perUserLimit: formData.perUserLimit || 1,
+        startDate: new Date(formData.startDate),
+        endDate: new Date(formData.endDate),
+        targetAudience: formData.targetAudience,
+        featured: formData.featured,
+        combinable: formData.combinable,
+        status: formData.status,
+        buttonText: formData.buttonText,
+        buttonLink: formData.buttonLink,
+        image: this.selectedImage?.file,
+        // Legacy fields
+        displayOrder: 0,
+        type: 'deal'
       };
 
       this.isLoading = true;
 
       const apiCall = this.editingPromo
-        ? this.adminApiService.updatePromo(this.editingPromo._id, promoData)
-        : this.adminApiService.createPromo(promoData);
+        ? this.promoManagementService.updatePromo(this.editingPromo._id, promoData)
+        : this.promoManagementService.createPromo(promoData);
 
       apiCall.subscribe({
-        next: (response) => {
+        next: (response: any) => {
           console.log('Promo saved successfully:', response);
+          this.toastr.success(response.message || 'Promo saved successfully');
           this.isLoading = false;
           this.cancelForm();
           this.loadPromos();
         },
-        error: (error) => {
+        error: (error: any) => {
           console.error('Error saving promo:', error);
+          this.toastr.error(error.error?.message || 'Failed to save promo');
           this.isLoading = false;
         }
       });
@@ -522,21 +546,26 @@ export class PromoManagementComponent implements OnInit {
 
     // Set existing image if available
     if (promo.image) {
+      const imageUrl = typeof promo.image === 'string' ? promo.image : promo.image.url;
       this.selectedImage = {
         file: null as any,
-        preview: promo.image
+        preview: imageUrl
       };
+    } else {
+      this.selectedImage = null;
     }
   }
 
   deletePromo(id: string): void {
     if (confirm('Are you sure you want to delete this promotion?')) {
-      this.adminApiService.deletePromo(id).subscribe({
+      this.promoManagementService.deletePromo(id).subscribe({
         next: () => {
+          this.toastr.success('Promo deleted successfully');
           this.loadPromos();
         },
-        error: (error) => {
+        error: (error: any) => {
           console.error('Error deleting promo:', error);
+          this.toastr.error('Failed to delete promo');
         }
       });
     }
@@ -544,14 +573,33 @@ export class PromoManagementComponent implements OnInit {
 
   togglePromoStatus(promo: any): void {
     const newStatus = promo.status === 'active' ? 'inactive' : 'active';
-    const updateData = { ...promo, status: newStatus };
+    const updateData: PromoCode = {
+      ...promo,
+      status: newStatus,
+      startDate: new Date(promo.startDate),
+      endDate: new Date(promo.endDate),
+      // Ensure all required fields have values
+      displayOrder: promo.displayOrder || 0,
+      type: promo.type || 'deal',
+      discountValue: promo.discountValue || 0,
+      minOrderValue: promo.minOrderValue || 0,
+      usageLimit: promo.usageLimit || 0,
+      perUserLimit: promo.perUserLimit || 1,
+      targetAudience: promo.targetAudience || 'all',
+      featured: promo.featured || false,
+      combinable: promo.combinable || false,
+      buttonText: promo.buttonText || 'Shop Now',
+      buttonLink: promo.buttonLink || '#'
+    };
 
-    this.adminApiService.updatePromo(promo._id, updateData).subscribe({
+    this.promoManagementService.updatePromo(promo._id, updateData).subscribe({
       next: () => {
+        this.toastr.success(`Promo ${newStatus === 'active' ? 'activated' : 'deactivated'} successfully`);
         this.loadPromos();
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error('Error updating promo status:', error);
+        this.toastr.error('Failed to update promo status');
       }
     });
   }
@@ -564,7 +612,15 @@ export class PromoManagementComponent implements OnInit {
   }
 
   getPromoImage(promo: any): string {
-    return promo.image || 'assets/placeholder-promo.jpg';
+    // Handle both object and string image formats
+    if (promo.image) {
+      if (typeof promo.image === 'string') {
+        return promo.image;
+      } else if (promo.image.url) {
+        return promo.image.url;
+      }
+    }
+    return 'assets/placeholder-promo.jpg';
   }
 
   getStatusClass(status: string): string {
@@ -591,7 +647,7 @@ export class PromoManagementComponent implements OnInit {
       case 'percentage':
         return `${promo.discountValue}% OFF`;
       case 'fixed':
-        return `£${promo.discountValue} OFF`;
+        return `₹${promo.discountValue} OFF`;
       case 'free_shipping':
         return 'FREE SHIPPING';
       case 'buy_one_get_one':

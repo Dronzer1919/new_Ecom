@@ -9,7 +9,7 @@
                     <div class="row">
                         <div class="col-md-4">
                             <label for="productName" class="form-label">Product Category</label>
-                            
+
                             <input type="text" class="form-control" id="productName" formControlName="categoryName" placeholder="Enter Product Category">
                         </div>
 
@@ -25,14 +25,14 @@
                     <div class="row my-3">
                         <div class="col-md-8">
                             <label for="formFile" class="form-label">Choose Product File</label>
-                            <input type="file" class="form-control" type="file" id="formFile" formControlName="img" 
+                            <input type="file" class="form-control" type="file" id="formFile" formControlName="img"
                                 accept="image/*" multiple (change)="onFileChange($event)">
                         </div>
                     </div>
                 </form>
             </div>
             <div class="text-end mx-3 my-2 ">
-                <button class="btn btn-primary " (click)="submitForm()">
+                <button class="btn btn-gradient-green " (click)="submitForm()">
                     save
                 </button>
             </div>
@@ -41,7 +41,7 @@
     <div class="col-md-4" *ngIf="isloaded">
         <app-preview-img [selectedIMG]="imageChangedEvent"></app-preview-img>
     </div>
-    
+
 </div>
 
 
@@ -79,7 +79,7 @@
                     <div class="row">
                         <div class="col-md-4">
                             <label for="categoryName" class="form-label">Product Category</label>
-                            <select class="form-select" aria-label="Default select example" 
+                            <select class="form-select" aria-label="Default select example"
                                 formControlName="categoryName">
                                 <option selected *ngFor="let item of allProductList" [value]="item._id">{{item.categoryName}}</option>
                             </select>
@@ -110,10 +110,10 @@
                         </div>
                     </div>
                     <div class="row my-3">
-                       
+
                         <div class="col-md-8">
                             <label for="formFile" class="form-label">Choose Product File</label>
-                            <input type="file" class="form-control" type="file" id="formFile" formControlName="img" 
+                            <input type="file" class="form-control" type="file" id="formFile" formControlName="img"
                                 accept="image/*" multiple (change)="onFileSelected($event)">
                         </div>
                     </div>
@@ -138,5 +138,5 @@
   <!-- <div>
     <h1 (click)="changeFruit()">Click to Change Fruit: {{ fruits[currentFruitIndex] }}</h1>
   </div> -->
- 
+
 <!-- image edit  -->

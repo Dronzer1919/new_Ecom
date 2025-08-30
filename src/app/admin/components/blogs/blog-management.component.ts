@@ -32,9 +32,13 @@ import { AdminApiService, AdminBlog } from '../../services/admin-api.service';
                 <div class="mb-3">
                   <label class="form-label">Title *</label>
                   <input type="text" class="form-control" formControlName="title"
-                         placeholder="Enter blog post title">
+                         placeholder="Enter blog post title"
+                         [class.is-invalid]="blogForm.get('title')?.invalid && blogForm.get('title')?.touched">
                   <div *ngIf="blogForm.get('title')?.invalid && blogForm.get('title')?.touched"
-                       class="text-danger small">Title is required</div>
+                       class="text-danger small">
+                    <div *ngIf="blogForm.get('title')?.errors?.['required']">Title is required</div>
+                    <div *ngIf="blogForm.get('title')?.errors?.['minlength']">Title must be at least 3 characters</div>
+                  </div>
                 </div>
 
                 <div class="mb-3">
@@ -46,9 +50,13 @@ import { AdminApiService, AdminBlog } from '../../services/admin-api.service';
                 <div class="mb-3">
                   <label class="form-label">Content *</label>
                   <textarea class="form-control" formControlName="content" rows="12"
-                            placeholder="Write your blog content here..."></textarea>
+                            placeholder="Write your blog content here..."
+                            [class.is-invalid]="blogForm.get('content')?.invalid && blogForm.get('content')?.touched"></textarea>
                   <div *ngIf="blogForm.get('content')?.invalid && blogForm.get('content')?.touched"
-                       class="text-danger small">Content is required</div>
+                       class="text-danger small">
+                    <div *ngIf="blogForm.get('content')?.errors?.['required']">Content is required</div>
+                    <div *ngIf="blogForm.get('content')?.errors?.['minlength']">Content must be at least 10 characters</div>
+                  </div>
                 </div>
 
                 <div class="row">
@@ -342,11 +350,11 @@ export class BlogManagementComponent implements OnInit {
 
   createBlogForm(): FormGroup {
     return this.fb.group({
-      title: ['', Validators.required],
+      title: ['', [Validators.required, Validators.minLength(3)]],
       excerpt: [''],
-      content: ['', Validators.required],
-      author: [''],
-      category: [''],
+      content: ['', [Validators.required, Validators.minLength(10)]],
+      author: ['Admin'],
+      category: ['design'],
       status: ['draft'],
       featured: [false],
       allowComments: [true],
@@ -411,9 +419,23 @@ export class BlogManagementComponent implements OnInit {
       const tags = formData.tagsInput ? formData.tagsInput.split(',').map((tag: string) => tag.trim()) : [];
 
       const blogData: AdminBlog = {
-        ...formData,
-        tags,
-        image: this.selectedImage?.file
+        title: formData.title,
+        excerpt: formData.excerpt || formData.title.substring(0, 100) + '...', // Auto-generate excerpt from title if empty
+        content: formData.content,
+        author: {
+          name: formData.author || 'Admin',
+          email: 'admin@example.com'
+        },
+        category: formData.category,
+        status: formData.status,
+        featured: formData.featured,
+        tags: tags,
+        seo: {
+          metaTitle: formData.metaTitle || formData.title,
+          metaDescription: formData.metaDescription || formData.excerpt || formData.title,
+          slug: formData.slug || (formData.title.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '') + '-' + Date.now())
+        },
+        image: this.selectedImage?.file || ''
       };
 
       this.isLoading = true;
@@ -425,15 +447,20 @@ export class BlogManagementComponent implements OnInit {
       apiCall.subscribe({
         next: (response) => {
           console.log('Blog saved successfully:', response);
+          alert(this.editingBlog ? 'Blog post updated successfully!' : 'Blog post created successfully!');
           this.isLoading = false;
           this.cancelForm();
           this.loadBlogs();
         },
         error: (error) => {
           console.error('Error saving blog:', error);
+          alert('Error saving blog post: ' + (error.error?.message || error.message));
           this.isLoading = false;
         }
       });
+    } else {
+      console.log('Form is invalid:', this.blogForm.errors);
+      alert('Please fill in all required fields.');
     }
   }
 
@@ -446,23 +473,32 @@ export class BlogManagementComponent implements OnInit {
       title: blog.title,
       excerpt: blog.excerpt,
       content: blog.content,
-      author: blog.author,
+      author: blog.author?.name || blog.author || 'Admin',
       category: blog.category,
       status: blog.status,
       featured: blog.featured,
       allowComments: blog.allowComments,
       tagsInput: blog.tags ? blog.tags.join(', ') : '',
-      metaTitle: blog.metaTitle,
-      metaDescription: blog.metaDescription,
-      slug: blog.slug
+      metaTitle: blog.seo?.metaTitle || blog.metaTitle,
+      metaDescription: blog.seo?.metaDescription || blog.metaDescription,
+      slug: blog.seo?.slug || blog.slug
     });
 
     // Set existing image if available
     if (blog.image) {
-      this.selectedImage = {
-        file: null as any,
-        preview: blog.image
-      };
+      let imageUrl = '';
+      if (typeof blog.image === 'string') {
+        imageUrl = blog.image.startsWith('http') ? blog.image : `http://localhost:3000${blog.image}`;
+      } else if (blog.image.url) {
+        imageUrl = blog.image.url.startsWith('http') ? blog.image.url : `http://localhost:3000${blog.image.url}`;
+      }
+
+      if (imageUrl) {
+        this.selectedImage = {
+          file: null as any,
+          preview: imageUrl
+        };
+      }
     }
   }
 
@@ -470,10 +506,12 @@ export class BlogManagementComponent implements OnInit {
     if (confirm('Are you sure you want to delete this blog post?')) {
       this.adminApiService.deleteBlog(id).subscribe({
         next: () => {
+          alert('Blog post deleted successfully!');
           this.loadBlogs();
         },
         error: (error) => {
           console.error('Error deleting blog:', error);
+          alert('Error deleting blog post: ' + (error.error?.message || error.message));
         }
       });
     }
@@ -492,7 +530,26 @@ export class BlogManagementComponent implements OnInit {
   }
 
   getBlogImage(blog: any): string {
-    return blog.image || 'assets/placeholder-blog.jpg';
+    // Handle different image URL formats from the backend
+    if (blog.image) {
+      if (typeof blog.image === 'string') {
+        // If it's already a full URL, return as is
+        if (blog.image.startsWith('http')) {
+          return blog.image;
+        }
+        // If it's a relative path, construct full URL
+        return `http://localhost:3000${blog.image}`;
+      } else if (blog.image.url) {
+        // If it's an object with url property
+        if (blog.image.url.startsWith('http')) {
+          return blog.image.url;
+        }
+        return `http://localhost:3000${blog.image.url}`;
+      }
+    }
+
+    // Fallback to placeholder
+    return 'assets/placeholder-blog.jpg';
   }
 
   getStatusClass(status: string): string {
