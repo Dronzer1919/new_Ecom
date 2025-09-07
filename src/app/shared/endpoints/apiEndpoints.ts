@@ -11,6 +11,8 @@ export const EndPoints = {
         // Product APIs
         addProduct: '{0}/products/create-products',
         getAllProduct: '{0}/products/getAllProduct',
+        getProductById: '{0}/api/products/{1}',
+        getRelatedProducts: '{0}/api/products/related/{1}/{2}',
         deleteProduct: '{0}/products/deleteProduct/{1}',
         editProduct: '{0}/products/editProduct/{1}',
         addType: '{0}/products/addtypes',

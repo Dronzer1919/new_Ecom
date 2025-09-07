@@ -5,6 +5,15 @@ export const serverRoutes: ServerRoute[] = [
     path: '',
     renderMode: RenderMode.Prerender
   },
+  // Ensure parameterized product routes are rendered on server (not prerendered)
+  {
+    path: 'product/:id',
+    renderMode: RenderMode.Server
+  },
+  {
+    path: 'products/:category',
+    renderMode: RenderMode.Server
+  },
   {
     path: 'productCategory/:id',
     renderMode: RenderMode.Server

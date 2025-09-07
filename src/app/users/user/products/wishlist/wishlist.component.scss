@@ -1,0 +1,432 @@
+// Wooden Theme for NGX Datatable in Wishlist
+.ngx-datatable {
+  background: #ffffff;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 15px rgba(139, 69, 19, 0.1);
+  overflow: hidden;
+
+  // Header styling
+  .datatable-header {
+    background: linear-gradient(135deg, #8B4513 0%, #D2691E 100%);
+    color: white;
+    font-weight: 600;
+    border-bottom: 2px solid #A0522D;
+
+    .datatable-header-cell {
+      background: transparent;
+      color: white;
+      border-right: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 12px 16px;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      .datatable-header-cell-wrapper {
+        color: white;
+      }
+
+      .datatable-header-cell-label {
+        color: white;
+        font-weight: 600;
+      }
+
+      // Sort icons
+      .sort-btn {
+        color: white;
+        opacity: 0.7;
+
+        &:hover {
+          opacity: 1;
+        }
+      }
+
+      .icon-sort,
+      .icon-sort-asc,
+      .icon-sort-desc {
+        color: white;
+      }
+    }
+  }
+
+  // Body styling
+  .datatable-body {
+    background: white;
+
+    .datatable-row-wrapper {
+      &:nth-child(even) {
+        background: rgba(139, 69, 19, 0.03);
+      }
+
+      &:hover {
+        background: rgba(139, 69, 19, 0.08);
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(139, 69, 19, 0.15);
+        transition: all 0.3s ease;
+      }
+
+      .datatable-body-row {
+        border-bottom: 1px solid rgba(139, 69, 19, 0.1);
+
+        .datatable-body-cell {
+          padding: 12px 16px;
+          border-right: 1px solid rgba(139, 69, 19, 0.05);
+          color: #3c2415;
+          font-size: 0.875rem;
+
+          // Index number styling
+          &.text-center.fw-bold {
+            color: #8B4513;
+            font-size: 1rem;
+            font-weight: 700;
+          }
+
+          // Product ID styling
+          u {
+            color: #8B4513;
+            text-decoration-color: #D2691E;
+            cursor: pointer;
+          }
+
+          // Image styling
+          .wishlist-image {
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+            border-radius: 0.375rem;
+            border: 2px solid rgba(139, 69, 19, 0.2);
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+
+            &:hover {
+              border-color: #D2691E;
+              transform: scale(1.08);
+              box-shadow: 0 3px 10px rgba(139, 69, 19, 0.2);
+            }
+          }
+          
+
+          // Image styling (legacy)
+          img {
+            border-radius: 0.25rem;
+            border: 2px solid rgba(139, 69, 19, 0.2);
+            transition: all 0.3s ease;
+
+            &:hover {
+              border-color: #D2691E;
+              transform: scale(1.05);
+            }
+          }
+
+          /* Added-date column compact styling */
+          .date-added {
+            width: 100px;
+            max-width: 100px;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: 0.875rem;
+            color: #6c757d;
+          }
+          th.date-added {
+            white-space: nowrap;
+            text-align: center;
+            padding: 8px 6px;
+          }
+
+          // Remove button styling
+          div[onclick] {
+            cursor: pointer;
+            color: #8B4513;
+            font-weight: 500;
+            transition: all 0.3s ease;
+
+            &:hover {
+              color: #D2691E;
+              text-decoration: underline;
+              text-decoration-color: #D2691E;
+            }
+
+            u {
+              color: inherit;
+            }
+          }
+
+          // Delete icon styling
+          .delete-icon {
+            cursor: pointer;
+            color: #dc3545;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 0.375rem;
+            border: 1px solid #dc3545;
+            background: transparent;
+
+            &:hover {
+              color: #ffffff;
+              background: #dc3545;
+              border-color: #c82333;
+              transform: scale(1.05);
+            }
+
+            i {
+              font-size: 1rem;
+            }
+          }
+
+          // Price styling
+          &:has-text("₹") {
+            font-weight: 600;
+            color: #8B4513;
+          }
+        }
+
+        &.active,
+        &.datatable-row-even.active {
+          background: rgba(139, 69, 19, 0.1);
+        }
+      }
+    }
+  }
+
+  // Footer styling
+  .datatable-footer {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-top: 2px solid #D2691E;
+    padding: 12px 16px;
+
+    .datatable-pager {
+      color: #8B4513;
+
+      .pager {
+        .pages {
+          .page {
+            &.active a {
+              background: linear-gradient(135deg, #8B4513, #D2691E);
+              border-color: #8B4513;
+              color: white;
+            }
+
+            a {
+              color: #8B4513;
+              border-color: rgba(139, 69, 19, 0.3);
+
+              &:hover {
+                background: rgba(139, 69, 19, 0.1);
+                border-color: #D2691E;
+              }
+            }
+          }
+        }
+      }
+
+      .datatable-pager-left,
+      .datatable-pager-right {
+        color: #8B4513;
+      }
+    }
+  }
+
+  // Scrollbar styling
+  .datatable-body::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  .datatable-body::-webkit-scrollbar-track {
+    background: rgba(139, 69, 19, 0.1);
+    border-radius: 4px;
+  }
+
+  .datatable-body::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #8B4513, #D2691E);
+    border-radius: 4px;
+
+    &:hover {
+      background: linear-gradient(135deg, #654321, #B8860B);
+    }
+  }
+}
+
+// Material and striped class overrides
+.ngx-datatable.material {
+  box-shadow: 0 4px 20px rgba(139, 69, 19, 0.15);
+  border: 1px solid rgba(139, 69, 19, 0.1);
+}
+
+.ngx-datatable.striped {
+  .datatable-body .datatable-row-wrapper:nth-child(even) {
+    background: rgba(139, 69, 19, 0.03);
+  }
+}
+
+// Price details card styling
+.card {
+  border: 2px solid rgba(139, 69, 19, 0.2);
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 15px rgba(139, 69, 19, 0.1);
+
+  .card-header {
+    background: linear-gradient(135deg, #8B4513 0%, #D2691E 100%) !important;
+    color: white;
+    font-weight: 600;
+    border-bottom: 2px solid #A0522D;
+  }
+
+  .card-body {
+    background: white;
+    color: #3c2415;
+
+    div {
+      font-weight: 500;
+    }
+
+    hr {
+      border-color: rgba(139, 69, 19, 0.3);
+      border-width: 2px;
+    }
+  }
+
+  .card-footer {
+    background: rgba(139, 69, 19, 0.05) !important;
+    border-top: 1px solid rgba(139, 69, 19, 0.2);
+  }
+}
+
+// Buy now button
+.btn-gradient-orange {
+  background: linear-gradient(135deg, #8B4513 0%, #D2691E 100%);
+  border: none;
+  color: white;
+  font-weight: 600;
+  padding: 12px 24px;
+  border-radius: 0.375rem;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+
+  &:hover {
+    background: linear-gradient(135deg, #654321 0%, #B8860B 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(139, 69, 19, 0.3);
+    color: white;
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 0.2rem rgba(139, 69, 19, 0.25);
+    color: white;
+  }
+}
+
+// Empty wishlist message
+.text-center h4 {
+  color: #8B4513;
+  font-weight: 600;
+  margin-top: 3rem;
+  margin-bottom: 2rem;
+}
+
+// Table section
+.table-section h4 {
+  color: #8B4513;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 3px solid #D2691E;
+  display: inline-block;
+}
+
+/* Native table fixes for wishlist (template uses a regular <table>) */
+.table-section table {
+  table-layout: fixed; /* respect explicit widths on columns */
+  width: 100%;
+}
+
+.table-section th.date-added,
+.table-section td.date-added {
+  width: 100px;
+  min-width: 100px;
+  max-width: 100px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+}
+
+/* ensure inner text is rendered and truncated correctly */
+.table-section .date-text {
+  display: inline-block !important;
+  max-width: 100% !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  visibility: visible !important;
+}
+
+/* Stronger overrides to ensure the cell width and visibility are enforced */
+.table-section th.date-added,
+.table-section td.date-added {
+  width: 100px !important;
+  min-width: 100px !important;
+  max-width: 100px !important;
+  white-space: nowrap !important;
+  overflow: visible !important; /* allow inner span to handle ellipsis */
+  text-align: center !important;
+}
+
+.table-section td.date-added .date-text {
+  display: inline-block !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  padding: 0 !important;
+  margin: 0 auto !important;
+}
+
+/* Ensure the image in the native table uses the compact thumbnail sizing */
+.table-section img.img-thumbnail {
+  width: 40px !important;
+  height: 40px !important;
+  object-fit: cover;
+  border-radius: 0.375rem;
+}
+
+// Mobile responsiveness
+@media (max-width: 768px) {
+  .ngx-datatable {
+    .datatable-header .datatable-header-cell,
+    .datatable-body .datatable-body-cell {
+      padding: 8px 12px;
+      font-size: 0.8rem;
+    }
+
+    .datatable-body .datatable-body-cell img {
+      width: 36px;
+      height: 36px;
+      object-fit: cover;
+    }
+  }
+
+  .card {
+    margin-top: 2rem;
+  }
+}
+
+// Loading state
+.datatable-progress {
+  background: linear-gradient(135deg, #8B4513, #D2691E);
+}
+
+// Selection styling
+.datatable-row-wrapper.datatable-row-selected {
+  background: rgba(139, 69, 19, 0.15) !important;
+  border-left: 4px solid #D2691E;
+}

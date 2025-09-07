@@ -1,62 +1,56 @@
-
-
 <div class="row">
-
     <div class="col-md-9 ps-4 table-section">
-        <h4 class="mt-3">
-            WishList
-        </h4>
-            <ngx-datatable #datatable class="material striped mb-4 p-2" [columnMode]="'force'" [headerHeight]="30"
-                [rowHeight]="'auto'" [scrollbarH]="true" [limit]="50" [rows]='data'>
-                <ngx-datatable-column name="Product Id" [width]="10" [sortable]="true" [resizeable]="true">
-                    <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
-                        <div>
-                            <u>
-                                {{ row.id }}
-                            </u>
-                        </div>
-                    </ng-template>
-                </ngx-datatable-column>
-                <ngx-datatable-column name="Product Image" [width]="100" [sortable]="true" [resizeable]="true">
-                    <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
-                        <div>
-                            <img class="mobile" src="./../../../assets/chiken/{{row.im}}.jpg" width="25%">
-                        </div>
-                    </ng-template>
-                </ngx-datatable-column>
+                                                <div *ngIf="tableVisible">
+                                                    <ngx-datatable class="bootstrap mb-4"
+                                                                                 [rows]="data"
+                                                                                 [columnMode]="'force'"
+                                                                                 [headerHeight]="40"
+                                                                                 [rowHeight]="'auto'">
 
-                <ngx-datatable-column name="Product Name" [width]="100" [sortable]="true" [resizeable]="true">
-                    <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
-                        {{ row.n }}
-                    </ng-template>
-                </ngx-datatable-column>
-                <ngx-datatable-column name="Weight" [width]="100" [sortable]="true" [resizeable]="true">
-                    <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
-                        500 gm
-                    </ng-template>
-                </ngx-datatable-column>
-                <ngx-datatable-column name="Price" [width]="180" [sortable]="true" [resizeable]="true">
-                    <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
-                        {{ row.price }} ₹
-                    </ng-template>
-                </ngx-datatable-column>
-                <ngx-datatable-column name="Delete" [width]="180" [sortable]="true" [resizeable]="true">
-                    <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
-                        <div (click)="removeFromWishList(row.id)">
-                            <u>
-                                Remove Form Wishlist
-                            </u>
-                        </div>
+                                                        <ngx-datatable-column name="#" [width]=40>
+                                                            <ng-template ngx-datatable-cell-template let-row let-rowIndex="rowIndex">
+                                                                <div class="text-center fw-bold">{{ rowIndex + 1 }}</div>
+                                                            </ng-template>
+                                                        </ngx-datatable-column>
 
-                    </ng-template>
-                </ngx-datatable-column>
-            </ngx-datatable>
+                                                        <ngx-datatable-column name="Image" [width]=60>
+                                                            <ng-template ngx-datatable-cell-template let-row="row">
+                                                                    <img class="img-thumbnail" [src]="getImage(row)" [alt]="row.productName" onerror="this.src='/assets/images/placeholder.jpg'" />
+                                                            </ng-template>
+                                                        </ngx-datatable-column>
+
+                                                        <ngx-datatable-column name="Product" prop="productName"></ngx-datatable-column>
+
+                                                        <ngx-datatable-column name="Category" prop="category" [width]=80></ngx-datatable-column>
+
+                                                        <ngx-datatable-column name="Price" [width]=80>
+                                                            <ng-template ngx-datatable-cell-template let-row="row">
+                                                                {{ formatPrice(row.price) }}
+                                                            </ng-template>
+                                                        </ngx-datatable-column>
+
+                                                        <ngx-datatable-column name="Added Date" [width]=100>
+                                                            <ng-template ngx-datatable-cell-template let-row="row">
+                                                                <div class="date-added"><span class="date-text">{{ formatDate(row.addedDate) }}</span></div>
+                                                            </ng-template>
+                                                        </ngx-datatable-column>
+
+                                                        <ngx-datatable-column name="Delete" [width]=60>
+                                                            <ng-template ngx-datatable-cell-template let-row="row">
+                                                                <div class="delete-icon" (click)="removeFromWishList(row.id)" title="Remove from wishlist">
+                                                                    <i class="bi bi-trash"></i>
+                                                                </div>
+                                                            </ng-template>
+                                                        </ngx-datatable-column>
+
+                                                    </ngx-datatable>
+                                                </div>
 
 
     </div>
 
-    <div class="col-md-3 px-4 mt-5">
-        <div class="card px-2 card-title ">
+    <div class="col-md-3 px-4 ">
+        <div class="card card-title ">
             <div class="card-header bg-white">
                 <span class="">Price Details</span>
             </div>
@@ -75,13 +69,13 @@
                     </div>
                     <div class="col-4 text-end">
                         <div>
-                            {{totalAmount}} ₹
+                            £{{totalAmount}}
                         </div>
                         <div>
-                            {{discount}} ₹
+                            £{{discount}}
                         </div>
                         <div>
-                            {{deliveryCharges}} ₹
+                            £{{deliveryCharges}}
                         </div>
                     </div>
                 </div>
@@ -91,13 +85,13 @@
                         Total Amount
                     </div>
                     <div class="col-4 text-end">
-                        {{finalAmount}}₹
+                        £{{finalAmount}}
                     </div>
                 </div>
             </div>
-            <div class="card-footer bg-white">
-                <button type="button" class="btn btn-gradient-orange" style="width: 100%;" routerLink="/kart"
-                    routerLinkActive="active">BUY NOW</button>
+            <div class="card-footer bg-white p-0">
+                <button type="button" class="btn btn-gradient-orange w-100" routerLink="/cart"
+                    routerLinkActive="active">MOVE TO CART</button>
             </div>
         </div>
     </div>
@@ -108,6 +102,7 @@
     <h4>
         !!!Oops Nothing in your Wishlist
     </h4>
+    <p class="text-muted">Start adding items to your wishlist to see them here!</p>
 </div>
 
 

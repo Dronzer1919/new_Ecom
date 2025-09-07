@@ -1,0 +1,396 @@
+<div class="container-fluid py-4">
+  <!-- Breadcrumb -->
+  <nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink="/" class="text-decoration-none">Home</a></li>
+      <li class="breadcrumb-item"><a routerLink="/cart" class="text-decoration-none">Cart</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Checkout</li>
+    </ol>
+  </nav>
+
+  <!-- Progress Steps -->
+  <div class="row mb-4" *ngIf="!orderPlaced">
+    <div class="col-12">
+      <div class="d-flex justify-content-center">
+        <div class="checkout-steps">
+          <div class="step" [class.active]="currentStep >= 1" [class.completed]="currentStep > 1">
+            <div class="step-number">1</div>
+            <div class="step-title">Shipping</div>
+          </div>
+          <div class="step-line" [class.completed]="currentStep > 1"></div>
+          <div class="step" [class.active]="currentStep >= 2" [class.completed]="currentStep > 2">
+            <div class="step-number">2</div>
+            <div class="step-title">Review</div>
+          </div>
+          <div class="step-line" [class.completed]="currentStep > 2"></div>
+          <div class="step" [class.active]="currentStep >= 3" [class.completed]="currentStep > 3">
+            <div class="step-number">3</div>
+            <div class="step-title">Payment</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Order Success -->
+  <div class="row" *ngIf="orderPlaced && orderSummary">
+    <div class="col-12">
+      <div class="text-center py-5">
+        <div class="mb-4">
+          <i class="bi bi-check-circle-fill text-wood" style="font-size: 4rem;"></i>
+        </div>
+        <h2 class="text-wood mb-3">Order Placed Successfully!</h2>
+        <p class="text-muted mb-4">Thank you for your order. We'll send you a confirmation email shortly.</p>
+
+        <div class="card mx-auto" style="max-width: 600px;">
+          <div class="card-body">
+            <h5 class="card-title">Order Summary</h5>
+            <div class="row">
+              <div class="col-md-6">
+                <p><strong>Order ID:</strong> {{orderSummary.orderId}}</p>
+                <p><strong>Total:</strong> {{formatPrice(orderSummary.total)}}</p>
+                <p><strong>Payment Method:</strong> {{orderSummary.paymentMethod}}</p>
+              </div>
+              <div class="col-md-6">
+                <p><strong>Order Date:</strong> {{orderSummary.orderDate | date:'mediumDate'}}</p>
+                <p><strong>Estimated Delivery:</strong> {{orderSummary.estimatedDelivery | date:'mediumDate'}}</p>
+                <p><strong>Items:</strong> {{orderSummary.items.length}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-4">
+          <button class="btn btn-primary me-3" (click)="continueShopping()">
+            Continue Shopping
+          </button>
+          <button class="btn btn-outline-primary" (click)="viewOrderDetails()">
+            View Order Details
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Checkout Form -->
+  <div class="row" *ngIf="!orderPlaced">
+    <!-- Main Content -->
+    <div class="col-lg-8 col-md-7 mb-4">
+
+      <!-- Step 1: Shipping Address -->
+      <div class="card mb-4" *ngIf="currentStep === 1">
+        <div class="card-header">
+          <h5 class="mb-0">
+            <i class="bi bi-geo-alt me-2"></i>
+            Shipping Address
+          </h5>
+        </div>
+        <div class="card-body">
+          <!-- Saved Addresses -->
+          <div class="mb-4" *ngIf="savedAddresses.length > 0">
+            <h6>Saved Addresses</h6>
+            <div class="row g-3">
+              <div class="col-md-6" *ngFor="let address of savedAddresses; let i = index">
+                <div class="card address-card"
+                     [class.selected]="selectedAddressIndex === i"
+                     (click)="selectAddress(i)">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                      <div>
+                        <h6 class="card-title">{{address.fullName}}</h6>
+                        <p class="card-text small mb-1">
+                          {{address.addressLine1}}<br>
+                          <span *ngIf="address.addressLine2">{{address.addressLine2}}<br></span>
+                          {{address.city}}, {{address.state}} - {{address.pincode}}<br>
+                          Phone: {{address.phone}}
+                        </p>
+                        <span class="badge bg-primary" *ngIf="address.isDefault">Default</span>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio"
+                               [checked]="selectedAddressIndex === i"
+                               (change)="selectAddress(i)">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button class="btn btn-outline-primary mt-3" (click)="addNewAddress()">
+              <i class="bi bi-plus me-2"></i>Add New Address
+            </button>
+          </div>
+
+          <!-- Address Form -->
+          <div *ngIf="showAddressForm || savedAddresses.length === 0">
+            <h6 *ngIf="savedAddresses.length > 0">Add New Address</h6>
+            <form [formGroup]="addressForm" (ngSubmit)="saveAddress()">
+              <div class="row g-3">
+                <div class="col-md-12">
+                  <label class="form-label">Full Name *</label>
+                  <input type="text" class="form-control" formControlName="fullName"
+                         [class.is-invalid]="fullName?.invalid && fullName?.touched">
+                  <div class="invalid-feedback" *ngIf="fullName?.invalid && fullName?.touched">
+                    Please enter a valid full name (minimum 2 characters)
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  <label class="form-label">Address Line 1 *</label>
+                  <input type="text" class="form-control" formControlName="addressLine1"
+                         [class.is-invalid]="addressLine1?.invalid && addressLine1?.touched">
+                  <div class="invalid-feedback" *ngIf="addressLine1?.invalid && addressLine1?.touched">
+                    Please enter a valid address (minimum 5 characters)
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  <label class="form-label">Address Line 2</label>
+                  <input type="text" class="form-control" formControlName="addressLine2">
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">City *</label>
+                  <input type="text" class="form-control" formControlName="city"
+                         [class.is-invalid]="city?.invalid && city?.touched">
+                  <div class="invalid-feedback" *ngIf="city?.invalid && city?.touched">
+                    Please enter a valid city
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">State *</label>
+                  <input type="text" class="form-control" formControlName="state"
+                         [class.is-invalid]="state?.invalid && state?.touched">
+                  <div class="invalid-feedback" *ngIf="state?.invalid && state?.touched">
+                    Please enter a valid state
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Pincode *</label>
+                  <input type="text" class="form-control" formControlName="pincode"
+                         [class.is-invalid]="pincode?.invalid && pincode?.touched">
+                  <div class="invalid-feedback" *ngIf="pincode?.invalid && pincode?.touched">
+                    Please enter a valid 6-digit pincode
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Phone Number *</label>
+                  <input type="tel" class="form-control" formControlName="phone"
+                         [class.is-invalid]="phone?.invalid && phone?.touched">
+                  <div class="invalid-feedback" *ngIf="phone?.invalid && phone?.touched">
+                    Please enter a valid 10-digit phone number
+                  </div>
+                </div>
+                <div class="col-12">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" formControlName="isDefault">
+                    <label class="form-check-label">Set as default address</label>
+                  </div>
+                </div>
+              </div>
+              <div class="mt-3">
+                <button type="submit" class="btn btn-primary me-2" [disabled]="addressForm.invalid">
+                  Save Address
+                </button>
+                <button type="button" class="btn btn-outline-secondary"
+                        (click)="showAddressForm = false" *ngIf="savedAddresses.length > 0">
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Address Errors -->
+          <div class="alert alert-danger mt-3" *ngIf="addressErrors.length > 0">
+            <ul class="mb-0">
+              <li *ngFor="let error of addressErrors">{{error}}</li>
+            </ul>
+          </div>
+        </div>
+        <div class="card-footer d-flex justify-content-end">
+          <button class="btn btn-primary" (click)="nextStep()"
+                  [disabled]="selectedAddressIndex < 0 && (addressForm.invalid || !showAddressForm)">
+            Continue to Review
+            <i class="bi bi-arrow-right ms-2"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 2: Review Order -->
+      <div class="card mb-4" *ngIf="currentStep === 2">
+        <div class="card-header">
+          <h5 class="mb-0">
+            <i class="bi bi-eye me-2"></i>
+            Review Your Order
+          </h5>
+        </div>
+        <div class="card-body">
+          <!-- Shipping Address Summary -->
+          <div class="mb-4">
+            <h6>Shipping Address</h6>
+            <div class="border p-3 rounded" *ngIf="getSelectedAddress()">
+              <strong>{{getSelectedAddress()?.fullName}}</strong><br>
+              {{getSelectedAddress()?.addressLine1}}<br>
+              <span *ngIf="getSelectedAddress()?.addressLine2">{{getSelectedAddress()?.addressLine2}}<br></span>
+              {{getSelectedAddress()?.city}}, {{getSelectedAddress()?.state}} - {{getSelectedAddress()?.pincode}}<br>
+              Phone: {{getSelectedAddress()?.phone}}
+            </div>
+            <button class="btn btn-link p-0 mt-2" (click)="previousStep()">
+              <i class="bi bi-pencil me-1"></i>Change Address
+            </button>
+          </div>
+
+          <!-- Order Items -->
+          <div class="mb-4">
+            <h6>Order Items ({{cartSummary.itemCount}})</h6>
+            <div class="border rounded p-3">
+              <div class="row align-items-center mb-3" *ngFor="let item of cartItems; last as isLast">
+                <div class="col-2">
+                  <img [src]="item.images[0]" class="img-fluid rounded" style="height: 60px; object-fit: cover;">
+                </div>
+                <div class="col-6">
+                  <h6 class="mb-1">{{item.productName}}</h6>
+                  <small class="text-muted">
+                    Quantity: {{item.quantity}}
+                    <span *ngIf="item.weight"> • {{item.weight}}</span>
+                  </small>
+                </div>
+                <div class="col-4 text-end">
+                  <span class="fw-bold">{{formatPrice(item.price * item.quantity)}}</span>
+                </div>
+                <hr *ngIf="!isLast" class="my-3">
+              </div>
+            </div>
+          </div>
+
+          <!-- Delivery Information -->
+          <div class="alert alert-info">
+            <i class="bi bi-truck me-2"></i>
+            <strong>Estimated Delivery:</strong> {{getEstimatedDelivery()}}
+          </div>
+        </div>
+        <div class="card-footer d-flex justify-content-between">
+          <button class="btn btn-outline-secondary" (click)="previousStep()">
+            <i class="bi bi-arrow-left me-2"></i>Back
+          </button>
+          <button class="btn btn-primary" (click)="nextStep()">
+            Continue to Payment
+            <i class="bi bi-arrow-right ms-2"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 3: Payment -->
+      <div class="card mb-4" *ngIf="currentStep === 3">
+        <div class="card-header">
+          <h5 class="mb-0">
+            <i class="bi bi-credit-card me-2"></i>
+            Payment Method
+          </h5>
+        </div>
+        <div class="card-body">
+          <div class="payment-methods">
+            <!-- Online Payment -->
+            <div class="form-check payment-option mb-3">
+              <input class="form-check-input" type="radio" name="paymentMethod"
+                     value="razorpay" [(ngModel)]="paymentMethod" id="razorpay">
+              <label class="form-check-label w-100" for="razorpay">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <strong>Online Payment</strong>
+                    <div class="small text-muted">Credit/Debit Card, Net Banking, UPI, Wallets</div>
+                  </div>
+                  <div class="payment-icons">
+                    <i class="bi bi-credit-card text-primary"></i>
+                    <i class="bi bi-bank text-success ms-2"></i>
+                  </div>
+                </div>
+              </label>
+            </div>
+
+            <!-- Cash on Delivery -->
+            <div class="form-check payment-option">
+              <input class="form-check-input" type="radio" name="paymentMethod"
+                     value="cod" [(ngModel)]="paymentMethod" id="cod">
+              <label class="form-check-label w-100" for="cod">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <strong>Cash on Delivery</strong>
+                    <div class="small text-muted">Pay when you receive your order</div>
+                  </div>
+                  <div>
+                    <i class="bi bi-cash text-success"></i>
+                  </div>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Security Notice -->
+          <div class="alert alert-light mt-3">
+            <i class="bi bi-shield-check text-success me-2"></i>
+            Your payment information is secured with 256-bit SSL encryption
+          </div>
+        </div>
+        <div class="card-footer d-flex justify-content-between">
+          <button class="btn btn-outline-secondary" (click)="previousStep()">
+            <i class="bi bi-arrow-left me-2"></i>Back
+          </button>
+          <button class="btn btn-wood btn-lg" (click)="processPayment()" [disabled]="loading">
+            <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+            <i class="bi bi-lock me-2" *ngIf="!loading"></i>
+            <span *ngIf="paymentMethod === 'cod'">Place Order</span>
+            <span *ngIf="paymentMethod !== 'cod'">Pay {{formatPrice(cartSummary.total)}}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Order Summary Sidebar -->
+    <div class="col-lg-4 col-md-5">
+      <div class="card sticky-top" style="top: 20px;">
+        <div class="card-header">
+          <h5 class="mb-0">Order Summary</h5>
+        </div>
+        <div class="card-body">
+          <!-- Price Breakdown -->
+          <div class="d-flex justify-content-between mb-2">
+            <span>Subtotal ({{cartSummary.itemCount}} items)</span>
+            <span>{{formatPrice(cartSummary.subtotal)}}</span>
+          </div>
+          <div class="d-flex justify-content-between mb-2" *ngIf="cartSummary.discount > 0">
+            <span class="text-success">Discount</span>
+            <span class="text-success">-{{formatPrice(cartSummary.discount)}}</span>
+          </div>
+          <div class="d-flex justify-content-between mb-2">
+            <span>Tax (GST 18%)</span>
+            <span>{{formatPrice(cartSummary.tax)}}</span>
+          </div>
+          <div class="d-flex justify-content-between mb-3">
+            <span>Shipping</span>
+            <span *ngIf="cartSummary.shipping === 0" class="text-success">FREE</span>
+            <span *ngIf="cartSummary.shipping > 0">{{formatPrice(cartSummary.shipping)}}</span>
+          </div>
+          <hr>
+          <div class="d-flex justify-content-between">
+            <h5>Total</h5>
+            <h5 class="text-success">{{formatPrice(cartSummary.total)}}</h5>
+          </div>
+
+          <!-- Benefits -->
+          <div class="mt-4">
+            <div class="small text-muted mb-2">
+              <i class="bi bi-shield-check text-success me-1"></i>
+              100% Secure Payment
+            </div>
+            <div class="small text-muted mb-2">
+              <i class="bi bi-arrow-clockwise text-success me-1"></i>
+              Easy 7-day Returns
+            </div>
+            <div class="small text-muted">
+              <i class="bi bi-truck text-success me-1"></i>
+              Free shipping on orders above ₹500
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

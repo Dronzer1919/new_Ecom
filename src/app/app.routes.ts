@@ -43,6 +43,40 @@ export const routes: Routes = [
         path: 'productDetails/:id',
         loadComponent: () => import('./users/user/products/product-details/product-details.component').then(m => m.ProductDetailsComponent)
     },
+    // Enhanced e-commerce routes
+    {
+        path: 'product/:id',
+        loadComponent: () => import('./users/user/products/product-details/product-details.component').then(m => m.ProductDetailsComponent)
+    },
+    {
+        path: 'products',
+        loadComponent: () => import('./users/user/products/product-list/product-list.component').then(m => m.ProductListComponent)
+    },
+    {
+        path: 'products/:category',
+        loadComponent: () => import('./users/user/products/product-list/product-list.component').then(m => m.ProductListComponent)
+    },
+    {
+        path: 'cart',
+        loadComponent: () => import('./components/cart/cart.component').then(m => m.CartComponent)
+    },
+    {
+        path: 'checkout',
+        loadComponent: () => import('./components/checkout/checkout.component').then(m => m.CheckoutComponent)
+    },
+    {
+        path: 'orders',
+        loadComponent: () => import('./components/orders/orders.component').then(m => m.OrdersComponent)
+    },
+    {
+        path: 'profile',
+        loadComponent: () => import('./components/profile/profile.component').then(m => m.ProfileComponent)
+    },
+    {
+        path: 'offers',
+        loadComponent: () => import('./components/offers/offers.component').then(m => m.OffersComponent)
+    },
+    // Legacy routes (keeping for compatibility)
     {
         path: 'addToCart/:id',
         component: AddToCartComponent

@@ -31,11 +31,11 @@ export class ProductMapComponent implements OnInit, AfterViewInit {
   products: Product[] = [
     {
       id: '1',
-      name: 'Premium Chicken Wings',
-      price: 299,
-      category: 'Chicken',
-      description: 'Fresh, juicy chicken wings marinated in special spices',
-      image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2ZmZWFhNyIvPjx0ZXh0IHg9IjE1MCIgeT0iMTAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiMyZDM0MzYiPvCfkZcgQ2hpY2tlbiBXaW5nczwvdGV4dD48L3N2Zz4=',
+      name: 'Modern Sectional Sofa',
+      price: 45999,
+      category: 'Living Room',
+      description: 'Premium L-shaped sectional sofa with memory foam cushions',
+      image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2ZmZWFhNyIvPjx0ZXh0IHg9IjE1MCIgeT0iMTAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiMyZDM0MzYiPvCfm4sgU2VjdGlvbmFsIFNvZmE8L3RleHQ+PC9zdmc+',
       latitude: 28.6139,
       longitude: 77.2090,
       store: 'Delhi Central Store',
@@ -43,11 +43,11 @@ export class ProductMapComponent implements OnInit, AfterViewInit {
     },
     {
       id: '2',
-      name: 'Grilled Chicken Breast',
-      price: 450,
-      category: 'Chicken',
-      description: 'Tender grilled chicken breast, perfect for health-conscious customers',
-      image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2ZkY2I2ZSIvPjx0ZXh0IHg9IjE1MCIgeT0iMTAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiMyZDM0MzYiPvCfkZcgQ2hpY2tlbiBCcmVhc3Q8L3RleHQ+PC9zdmc+',
+      name: 'Oak Wood Dining Table',
+      price: 32999,
+      category: 'Dining Room',
+      description: 'Solid oak dining table for 6 people with elegant finish',
+      image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2ZkY2I2ZSIvPjx0ZXh0IHg9IjE1MCIgeT0iMTAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiMyZDM0MzYiPvCfqZAgRGluaW5nIFRhYmxlPC90ZXh0Pjwvc3ZnPg==',
       latitude: 28.7041,
       longitude: 77.1025,
       store: 'North Delhi Branch',
@@ -55,11 +55,11 @@ export class ProductMapComponent implements OnInit, AfterViewInit {
     },
     {
       id: '3',
-      name: 'Chicken Biryani Special',
-      price: 350,
-      category: 'Ready-to-eat',
-      description: 'Aromatic basmati rice with tender chicken pieces',
-      image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2U3NGMzYyIvPjx0ZXh0IHg9IjE1MCIgeT0iMTAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IndoaXRlIj7wn42ZIEJpcnlhbmkgU3BlY2lhbDwvdGV4dD48L3N2Zz4=',
+      name: 'King Size Bed with Storage',
+      price: 28999,
+      category: 'Bedroom',
+      description: 'Premium king size bed with built-in storage compartments',
+      image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2U3NGMzYyIvPjx0ZXh0IHg9IjE1MCIgeT0iMTAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IndoaXRlIj7wn5qSIEtpbmcgU2l6ZSBCZWQ8L3RleHQ+PC9zdmc+',
       latitude: 28.5355,
       longitude: 77.3910,
       store: 'Noida Branch',
@@ -67,11 +67,11 @@ export class ProductMapComponent implements OnInit, AfterViewInit {
     },
     {
       id: '4',
-      name: 'Chicken Seekh Kebab',
-      price: 280,
-      category: 'Kebabs',
-      description: 'Spiced minced chicken shaped into delicious kebabs',
-      image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iIzAwYjg5NCIvPjx0ZXh0IHg9IjE1MCIgeT0iMTAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IndoaXRlIj7wn4ytIFNlZWtoIEtlYmFiPC90ZXh0Pjwvc3ZnPg==',
+      name: 'Executive Office Chair',
+      price: 15999,
+      category: 'Office',
+      description: 'Ergonomic executive chair with lumbar support and premium leather',
+      image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iIzAwYjg5NCIvPjx0ZXh0IHg9IjE1MCIgeT0iMTAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IndoaXRlIj7wn4qRIE9mZmljZSBDaGFpcjwvdGV4dD48L3N2Zz4=',
       latitude: 28.4595,
       longitude: 77.0266,
       store: 'Gurgaon Store',
@@ -79,11 +79,11 @@ export class ProductMapComponent implements OnInit, AfterViewInit {
     },
     {
       id: '5',
-      name: 'Chicken Curry Ready Mix',
-      price: 180,
-      category: 'Ready-to-cook',
-      description: 'Pre-marinated chicken pieces ready for curry preparation',
-      image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2Y1OWUwYiIvPjx0ZXh0IHg9IjE1MCIgeT0iMTAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IndoaXRlIj7wn42ZIEN1cnJ5IE1peDwvdGV4dD48L3N2Zz4=',
+      name: 'Modular Wardrobe System',
+      price: 55999,
+      category: 'Storage',
+      description: 'Customizable modular wardrobe with sliding doors and organizers',
+      image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2Y1OWUwYiIvPjx0ZXh0IHg9IjE1MCIgeT0iMTAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IndoaXRlIj7wn5qLIFdhcmRyb2JlPC90ZXh0Pjwvc3ZnPg==',
       latitude: 28.6692,
       longitude: 77.4538,
       store: 'Ghaziabad Branch',
@@ -91,11 +91,11 @@ export class ProductMapComponent implements OnInit, AfterViewInit {
     },
     {
       id: '6',
-      name: 'Tandoori Chicken',
-      price: 520,
-      category: 'Tandoori',
-      description: 'Clay oven roasted chicken with authentic tandoori spices',
-      image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2VmNDQ0NCIvPjx0ZXh0IHg9IjE1MCIgeT0iMTAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IndoaXRlIj7wn5KlIFRhbmRvb3JpPC90ZXh0Pjwvc3ZnPg==',
+      name: 'Designer Coffee Table',
+      price: 18999,
+      category: 'Living Room',
+      description: 'Contemporary glass-top coffee table with wooden base',
+      image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2VmNDQ0NCIvPjx0ZXh0IHg9IjE1MCIgeT0iMTAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IndoaXRlIj7inJggQ29mZmVlIFRhYmxlPC90ZXh0Pjwvc3ZnPg==',
       latitude: 28.6304,
       longitude: 77.2177,
       store: 'Connaught Place',
@@ -110,11 +110,11 @@ export class ProductMapComponent implements OnInit, AfterViewInit {
 
   categories = [
     { value: 'all', label: 'All Categories' },
-    { value: 'Chicken', label: 'Fresh Chicken' },
-    { value: 'Ready-to-eat', label: 'Ready to Eat' },
-    { value: 'Kebabs', label: 'Kebabs' },
-    { value: 'Ready-to-cook', label: 'Ready to Cook' },
-    { value: 'Tandoori', label: 'Tandoori' }
+    { value: 'Living Room', label: 'Living Room' },
+    { value: 'Bedroom', label: 'Bedroom' },
+    { value: 'Dining Room', label: 'Dining Room' },
+    { value: 'Office', label: 'Office Furniture' },
+    { value: 'Storage', label: 'Storage Solutions' }
   ];
 
   availabilityOptions = [
@@ -221,7 +221,7 @@ export class ProductMapComponent implements OnInit, AfterViewInit {
 
   getAvailabilityColor(availability: string): string {
     const colors = {
-      'available': 'success',
+      'available': 'wood',
       'low-stock': 'warning',
       'out-of-stock': 'danger'
     };

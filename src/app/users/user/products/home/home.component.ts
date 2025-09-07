@@ -1,6 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit, AfterViewInit } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
 import { EcommerceApiService, Product as ApiProduct, BlogPost, PromoCard, HomepageData } from '../../../../services/ecommerce-api.service';
+import { CartService } from '../../../../services/cart.service';
+import { WishlistService } from '../../../../services/wishlist.service';
+import { ToastrService } from 'ngx-toastr';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -19,7 +23,7 @@ type Product = {
 @Component({
   standalone: true,
   selector: 'app-home',
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
@@ -37,6 +41,9 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // Loading state
   isLoading = false;
+
+  // Wishlist count for floating button
+  wishlistCount = 0;
 
   // Fallback local data (kept for offline/development use)
   localPromoCards = [
@@ -56,7 +63,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   localTopRated: Product[] = [
     { id: 6, title: 'The Signature Chair', price: 499.00, image: 'assets/furniture/chair-6.jpg', rating: 5 },
     { id: 7, title: 'Normal Classic Chair', price: 259.00, image: 'assets/furniture/chair-7.jpg', rating: 5 },
-    { id: 8, title: 'Green Cover Chair', price: 279.00, image: 'assets/furniture/chair-8.jpg', rating: 4 },
+    { id: 8, title: 'Wooden Frame Chair', price: 279.00, image: 'assets/furniture/chair-8.jpg', rating: 4 },
     { id: 9, title: 'Black Wood Chair', price: 219.00, image: 'assets/furniture/chair-9.jpg', rating: 4 }
   ];
 
@@ -84,11 +91,18 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   private timer?: any;
   countdown = { d: '00', h: '00', m: '00', s: '00' };
 
-  constructor(private apiService: EcommerceApiService) {}
+  constructor(
+    private apiService: EcommerceApiService,
+    private router: Router,
+    private cartService: CartService,
+    private wishlistService: WishlistService,
+    private toastr: ToastrService
+  ) {}
 
   ngOnInit(): void {
-    console.log('🏠 Home component initialized');
+    console.log('🏠 Home component initialized - with cart functionality');
     this.loadHomepageData();
+    this.loadWishlistCount();
     // this.initializeCountdown();
   }
 
@@ -355,5 +369,95 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
     // Fallback to placeholder or default image
     return blog.image || 'assets/placeholder-blog.jpg';
+  }
+
+  // Navigate to product details
+  viewProductDetails(product: any): void {
+    console.log('🔍 Clicked product:', product);
+    const productId = product.id || product._id;
+    console.log('🆔 Product ID for navigation:', productId);
+    if (productId) {
+      console.log('🚀 Navigating to product details:', `/productDetails/${productId}`);
+      // Store product data for compatibility
+      localStorage.setItem('details', JSON.stringify(product));
+      this.router.navigate(['/productDetails', productId]);
+    } else {
+      console.error('❌ No product ID found for navigation');
+    }
+  }
+
+  // Simple test method to verify clicks work
+  testClick(): void {
+    console.log('🧪 TEST CLICK WORKS!');
+    alert('Click is working!');
+  }
+
+  // Navigate to product list
+  viewAllProducts(): void {
+    this.router.navigate(['/products']);
+  }
+
+  // Add product to cart
+  addToCart(product: any, event?: Event): void {
+    if (event) {
+      event.stopPropagation();
+    }
+
+    // Convert API product to cart format
+    const cartProduct = {
+      id: product.id || product._id,
+      productName: product.title || product.productName,
+      price: product.price,
+      images: product.images ? [`http://localhost:3000/uploads/${product.images[0]}`] : [product.image],
+      category: product.category,
+      stock: product.stock || 10,
+      weight: product.weight || '500gm'
+    };
+
+    this.cartService.addToCart(cartProduct, 1);
+    this.toastr.success(`${cartProduct.productName} added to cart!`);
+  }
+
+  // Add product to wishlist
+  addToWishlist(product: any, event?: Event): void {
+    if (event) {
+      event.stopPropagation();
+    }
+
+    const wishlistProduct = {
+      id: product.id || product._id,
+      productName: product.title || product.productName,
+      price: product.price,
+      images: product.images ? [`http://localhost:3000/uploads/${product.images[0]}`] : [product.image],
+      category: product.category
+    };
+
+    this.wishlistService.addToWishlist(wishlistProduct).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.toastr.success(response.message);
+          this.loadWishlistCount(); // Update count after adding
+        } else {
+          this.toastr.info(response.message);
+        }
+      }
+    });
+  }
+
+  // Check if product is in wishlist
+  isInWishlist(productId: string): boolean {
+    return this.wishlistService.isInWishlist(productId);
+  }
+
+  // Load wishlist count for floating button
+  private loadWishlistCount(): void {
+    this.wishlistService.wishlistItems$.subscribe(items => {
+      this.wishlistCount = items.length;
+    });
+  }
+
+  // Navigate to wishlist page
+  viewWishlist(): void {
+    this.router.navigate(['/wishlist']);
   }
 }

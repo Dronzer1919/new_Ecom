@@ -472,50 +472,50 @@ export class ProductManagementComponent implements OnInit {
     const tempCategories: ProductCategory[] = [
       {
         _id: 'temp-1',
-        categoryName: 'Furniture',
-        description: 'Home and office furniture',
+        categoryName: 'Living Room',
+        description: 'Living room furniture and accessories',
         image: []
       },
       {
         _id: 'temp-2',
-        categoryName: 'Electronics',
-        description: 'Electronic devices and gadgets',
+        categoryName: 'Bedroom',
+        description: 'Bedroom furniture and decor',
         image: []
       },
       {
         _id: 'temp-3',
-        categoryName: 'Clothing',
-        description: 'Fashion and apparel',
+        categoryName: 'Dining Room',
+        description: 'Dining furniture and accessories',
         image: []
       },
       {
         _id: 'temp-4',
-        categoryName: 'Home & Garden',
-        description: 'Home improvement and garden supplies',
+        categoryName: 'Office Furniture',
+        description: 'Professional office furniture solutions',
         image: []
       },
       {
         _id: 'temp-5',
-        categoryName: 'Sports & Outdoors',
-        description: 'Sports equipment and outdoor gear',
+        categoryName: 'Storage & Organization',
+        description: 'Storage solutions and organizers',
         image: []
       },
       {
         _id: 'temp-6',
-        categoryName: 'Books & Media',
-        description: 'Books, movies, and music',
+        categoryName: 'Lighting',
+        description: 'Indoor and outdoor lighting solutions',
         image: []
       },
       {
         _id: 'temp-7',
-        categoryName: 'Health & Beauty',
-        description: 'Health and beauty products',
+        categoryName: 'Decor & Accessories',
+        description: 'Home decor and accessories',
         image: []
       },
       {
         _id: 'temp-8',
-        categoryName: 'Toys & Games',
-        description: 'Toys and gaming products',
+        categoryName: 'Outdoor Furniture',
+        description: 'Garden and patio furniture',
         image: []
       }
     ];
@@ -646,7 +646,7 @@ export class ProductManagementComponent implements OnInit {
 
   getBadgeClass(badge: string): string {
     const classes: { [key: string]: string } = {
-      'new': 'bg-success',
+      'new': 'bg-wood',
       'sale': 'bg-danger',
       'hot': 'bg-warning',
       'featured': 'bg-primary',
@@ -658,12 +658,12 @@ export class ProductManagementComponent implements OnInit {
   getStockClass(quantity: number): string {
     if (quantity === 0) return 'text-danger';
     if (quantity < 10) return 'text-warning';
-    return 'text-success';
+    return 'text-wood';
   }
 
   getStatusClass(status: string): string {
     const classes: { [key: string]: string } = {
-      'active': 'bg-success',
+      'active': 'bg-wood',
       'inactive': 'bg-warning',
       'discontinued': 'bg-danger'
     };

@@ -5,9 +5,14 @@
 /* Global Gradient Button Classes */
 :root {
   --gradient-blue: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --gradient-green: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%);
+  --gradient-wood: linear-gradient(135deg, #8B4513 0%, #D2691E 50%, #DEB887 100%);
+  --gradient-wood-dark: linear-gradient(135deg, #654321 0%, #A0522D 50%, #CD853F 100%);
   --gradient-orange: linear-gradient(135deg, #ff6a00 0%, #ee0979 100%);
   --gradient-purple: linear-gradient(135deg, #8360c3 0%, #2ebf91 100%);
+  --wood-primary: #8B4513;
+  --wood-secondary: #D2691E;
+  --wood-light: #DEB887;
+  --wood-accent: #CD853F;
 }
 
 /* Gradient button classes for global use */
@@ -25,18 +30,19 @@
   box-shadow: 0 0.25rem 0.5rem rgba(102, 126, 234, 0.4);
 }
 
-.btn-gradient-green {
-  background: var(--gradient-green);
+.btn-gradient-wood {
+  background: var(--gradient-wood);
   color: white;
   border: none;
   transition: all 0.3s ease;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
 }
 
-.btn-gradient-green:hover {
-  background: linear-gradient(135deg, #4a9629 0%, #96dab7 100%);
+.btn-gradient-wood:hover {
+  background: var(--gradient-wood-dark);
   color: white;
   transform: translateY(-1px);
-  box-shadow: 0 0.25rem 0.5rem rgba(86, 171, 47, 0.4);
+  box-shadow: 0 0.25rem 0.5rem rgba(139, 69, 19, 0.4);
 }
 
 .btn-gradient-orange {
@@ -69,7 +75,7 @@
 
 /* Small button variants */
 .btn-sm.btn-gradient-blue:hover,
-.btn-sm.btn-gradient-green:hover,
+.btn-sm.btn-gradient-wood:hover,
 .btn-sm.btn-gradient-orange:hover,
 .btn-sm.btn-gradient-purple:hover {
   transform: translateY(-1px);
@@ -89,10 +95,10 @@ $disabled: #abb3b5;
 $input-field: #ced4da;
 $card-bg: rgb(182, 182, 182);
 $danger: #e3161e;
-$success: #00b500;
+$success: #8B4513;
 $error-message: #ff7f00;
 $failed: #be3232;
-$completed: #0bbc8a;
+$completed: #D2691E;
 $ribbon-color : #f4e5c4;
 $icon-bg: #f4e5c4;
 $ribbon-font-color: #323031;
@@ -111,7 +117,7 @@ $container-color: #fff1ef;
 $border : #cbc8c8;
 $warning-text: #be3232;
 $div-color: #f7f8ff;
-$green-color: #118b0c;
+$wood-color: #8B4513;
 
 $ep-primary : #131640;
 $ep-secondary: #ea652b;
@@ -122,6 +128,42 @@ $ep-peach-color: #fce8e0;
 $ep-disabled: lightn(#ea652b, 0%);
 $data-table-hover: #ccd4ff;
 $ep-card-body: #a0aae473;
+
+/* Wood color utility classes */
+.text-wood {
+  color: var(--wood-primary) !important;
+}
+
+.bg-wood {
+  background-color: var(--wood-primary) !important;
+}
+
+.btn-wood {
+  background-color: var(--wood-primary);
+  border-color: var(--wood-primary);
+  color: white;
+}
+
+.btn-wood:hover {
+  background-color: var(--wood-secondary);
+  border-color: var(--wood-secondary);
+  color: white;
+}
+
+.btn-outline-wood {
+  color: var(--wood-primary);
+  border-color: var(--wood-primary);
+}
+
+.btn-outline-wood:hover {
+  background-color: var(--wood-primary);
+  border-color: var(--wood-primary);
+  color: white;
+}
+
+.badge.bg-wood {
+  background-color: var(--wood-primary) !important;
+}
 
 $pre-login-border: #cea63e;
 $pre-login-bg: #fdf5e0;
@@ -148,26 +190,29 @@ $ellipse2-bg: #ebf9f5;
 
 
 .ngx-datatable.fixed-header .datatable-header .datatable-header-inner .datatable-header-cell {
-    background-color: #5c3cbb !important;
+    background: #8B4513 !important;
     color: $white-color;
     display: flex !important;
     align-items: center !important;
+    font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 
 
 ngx-datatable {
-    box-shadow: none !important;
-    border: 1px solid $disabled;
+    box-shadow: 0 4px 15px rgba(139, 69, 19, 0.1) !important;
+    border: 2px solid rgba(139, 69, 19, 0.2);
     border-radius: 10px;
 
     &.material.striped .datatable-row-odd {
-        background-color: $strip-clr !important;
+        background-color: rgba(139, 69, 19, 0.03) !important;
     }
 
     datatable-header {
         border-radius: 6px;
         width: auto !important;
+        background: #8B4513;
     }
 
     datatable-body {
@@ -176,32 +221,30 @@ ngx-datatable {
 
         datatable-body-cell {
             padding-left: 10px !important;
+            color: #3c2415;
         }
     }
-
-
 
     .page-count {
         height: fit-content !important;
         line-height: inherit !important;
-        color: $ep-secondary;
+        color: #8B4513;
         font-family: Lato-Regular, sans-serif;
         display: contents;
         text-transform: capitalize;
+        font-weight: 600;
     }
 
     li.active a {
-        background-color: rgba(158, 158, 158, 0.2);
+        background: #8B4513;
         font-weight: bold;
-        color: $ep-secondary !important;
+        color: white !important;
         font-family: Lato-Bold, sans-serif;
+        border-color: #8B4513;
     }
-
-
 
     &.fixed-header .datatable-header .datatable-header-inner .datatable-header-cell {
         padding: 5px 0px 5px 10px !important;
-
     }
 }
 
@@ -252,10 +295,11 @@ ngx-datatable {
 
 .ngx-datatable.material:not(.cell-selection) .datatable-body-row:hover,
 .ngx-datatable.material:not(.cell-selection) .datatable-body-row:hover .datatable-row-group {
-    background-color: $data-table-hover !important;
+    background-color: rgba(139, 69, 19, 0.08) !important;
     transition-property: background;
     transition-duration: 0.3s;
-    transition-timing-function: linear;
+    transition-timing-function: ease;
+    box-shadow: 0 2px 8px rgba(139, 69, 19, 0.15);
 }
 
 .card {
@@ -353,17 +397,135 @@ input::-webkit-input-placeholder {
 .ngx-datatable {
     .datatable-footer {
         .datatable-footer-inner {
-            color: $primary;
+            color: #8B4513;
             padding-left: 0 !important;
             height: 35px !important;
+            background: #f8f9fa;
+            border-top: 2px solid #D2691E;
+            font-weight: 600;
         }
     }
-
 }
 
 
 .secondary-color{
     font-size: medium;
-    color: #f95b01 !important;
+    color: #8B4513 !important;
     font-weight: bold;
+}
+
+/* Additional NGX Datatable Wooden Theme */
+.ngx-datatable {
+    // Header cell styling
+    .datatable-header-cell {
+        background: #8B4513 !important;
+        color: white !important;
+        border-right: 1px solid rgba(255, 255, 255, 0.2);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+
+        &:hover {
+            background: #654321 !important;
+        }
+
+        .datatable-header-cell-wrapper,
+        .datatable-header-cell-label {
+            color: white !important;
+        }
+
+        // Sort icons
+        .sort-btn,
+        .icon-sort,
+        .icon-sort-asc,
+        .icon-sort-desc {
+            color: white !important;
+            opacity: 0.8;
+
+            &:hover {
+                opacity: 1;
+            }
+        }
+    }
+
+    // Body cell styling
+    .datatable-body-cell {
+        border-right: 1px solid rgba(139, 69, 19, 0.1);
+
+        // Links and clickable elements
+        u, a {
+            color: #8B4513;
+            cursor: pointer;
+            transition: all 0.3s ease;
+
+            &:hover {
+                color: #D2691E;
+                text-decoration-color: #D2691E;
+            }
+        }
+    }
+
+    // Pagination styling
+    .datatable-pager {
+        .pager {
+            .pages {
+                .page {
+                    a {
+                        color: #8B4513;
+                        border-color: rgba(139, 69, 19, 0.3);
+                        transition: all 0.3s ease;
+
+                        &:hover {
+                            background: rgba(139, 69, 19, 0.1);
+                            border-color: #D2691E;
+                            color: #654321;
+                        }
+                    }
+
+                    &.active a {
+                        background: #8B4513 !important;
+                        border-color: #8B4513 !important;
+                        color: white !important;
+                    }
+                }
+            }
+        }
+
+        .datatable-pager-left,
+        .datatable-pager-right {
+            color: #8B4513;
+            font-weight: 600;
+        }
+    }
+
+    // Scrollbar styling
+    .datatable-body::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    .datatable-body::-webkit-scrollbar-track {
+        background: rgba(139, 69, 19, 0.1);
+        border-radius: 4px;
+    }
+
+    .datatable-body::-webkit-scrollbar-thumb {
+        background: #8B4513;
+        border-radius: 4px;
+
+        &:hover {
+            background: #654321;
+        }
+    }
+
+    // Selection styling
+    .datatable-row-wrapper.datatable-row-selected {
+        background: rgba(139, 69, 19, 0.15) !important;
+        border-left: 4px solid #D2691E;
+    }
+
+    // Loading state
+    .datatable-progress {
+        background: #8B4513;
+    }
 }
