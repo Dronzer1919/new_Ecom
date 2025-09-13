@@ -67,13 +67,28 @@ export class CartService {
   addToCart(product: any, quantity: number = 1): void {
   // Support anonymous users: if no userId, call guest endpoints which rely on HttpOnly cookie
 
+    // Normalize images to ensure proper URLs
+    let normalizedImages: string[] = [];
+    if (product.images && Array.isArray(product.images)) {
+      normalizedImages = product.images.map((img: any) => {
+        if (typeof img === 'object' && img.url) {
+          return normalizeImagePath(img.url);
+        }
+        return normalizeImagePath(img);
+      });
+    } else if (product.image) {
+      normalizedImages = [normalizeImagePath(product.image)];
+    } else if (product.primaryImage) {
+      normalizedImages = [normalizeImagePath(product.primaryImage)];
+    }
+
     const payload = {
       productId: product._id || product.id,
-      productName: product.productName || product.name,
+      productName: product.productName || product.title || product.name,
       price: product.productPrice || product.price,
       originalPrice: product.originalPrice,
       quantity: quantity,
-      images: product.images || (product.image ? [product.image] : []),
+      images: normalizedImages,
       category: product.category || '',
       description: product.description || '',
       weight: product.weight || '500gm',

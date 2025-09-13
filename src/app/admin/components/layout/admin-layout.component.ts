@@ -33,6 +33,11 @@ import { RouterModule, RouterOutlet } from '@angular/router';
                 </a>
               </li>
               <li class="nav-item">
+                <a class="nav-link" routerLink="/admin/categories" routerLinkActive="active">
+                  <i class="bi bi-tags me-1"></i>Categories
+                </a>
+              </li>
+              <li class="nav-item">
                 <a class="nav-link" routerLink="/admin/blogs" routerLinkActive="active">
                   <i class="bi bi-journal-text me-1"></i>Blogs
                 </a>

@@ -4,12 +4,13 @@
 
 export const environment = {
   production: false,
+  apiUrl: 'http://localhost:3000/api',
   serviceBaseUrls: {
     DOMAIN01: 'http://localhost:3000',
     // DOMAIN02: 'http://dev.',
     // DOMAIN02: 'http://qa.',
 
-   
+
   },
 };
 

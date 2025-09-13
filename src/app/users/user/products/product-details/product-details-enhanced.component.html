@@ -1,0 +1,489 @@
+<div class="container-fluid py-4" *ngIf="!loading && (product || data)">
+  <!-- Breadcrumb -->
+  <nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a routerLink="/" class="text-decoration-none text-muted">Furniture</a></li>
+      <li class="breadcrumb-item"><a routerLink="/products" class="text-decoration-none text-muted">Home Furniture</a></li>
+      <li class="breadcrumb-item"><a routerLink="/products" class="text-decoration-none text-muted">Living Room Furniture</a></li>
+      <li class="breadcrumb-item active text-muted" aria-current="page">Living Room Sofas</li>
+    </ol>
+  </nav>
+
+  <!-- Product Title with Sale Badge -->
+  <div class="row mb-3">
+    <div class="col-12">
+      <div class="d-flex align-items-center gap-3">
+        <span class="badge bg-danger rounded-pill px-3 py-2">
+          <i class="bi bi-lightning-fill me-1"></i>Super
+        </span>
+        <h1 class="h4 mb-0 fw-bold">{{product?.title || data?.title || 'Turkish Style Chinese Design Living Room Sofa Set Home Hotel Furniture with Fabric Free Sample Available SOFA'}}</h1>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Product Section -->
+  <div class="row g-4">
+    <!-- Product Images -->
+    <div class="col-lg-6 col-md-6">
+      <div class="product-images">
+        <!-- Main Image with Navigation Arrows -->
+        <div class="main-image mb-3 position-relative">
+          <div class="product-gallery-container bg-light rounded-3 p-3" style="height: 500px;">
+            <img [src]="getMainProductImage()"
+                 class="img-fluid rounded-3 w-100 h-100"
+                 style="object-fit: cover;"
+                 [alt]="product?.title || data?.title || 'Product Image'"
+                 onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjhmOWZhIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzZjNzU3ZCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vIEltYWdlPC90ZXh0Pjwvc3ZnPg=='">
+
+            <!-- Navigation arrows -->
+            <button class="btn btn-light rounded-circle position-absolute top-50 start-0 translate-middle-y ms-3 shadow-sm"
+                    style="width: 40px; height: 40px;"
+                    (click)="previousImage()"
+                    *ngIf="getProductImages().length > 1">
+              <i class="bi bi-chevron-left"></i>
+            </button>
+            <button class="btn btn-light rounded-circle position-absolute top-50 end-0 translate-middle-y me-3 shadow-sm"
+                    style="width: 40px; height: 40px;"
+                    (click)="nextImage()"
+                    *ngIf="getProductImages().length > 1">
+              <i class="bi bi-chevron-right"></i>
+            </button>
+
+            <!-- Action buttons overlay -->
+            <div class="position-absolute top-0 end-0 m-3">
+              <div class="d-flex flex-column gap-2">
+                <button class="btn btn-light rounded-circle p-2 shadow-sm"
+                        (click)="isInWishlist ? removeFromWishlist() : addToWishlist()"
+                        [title]="isInWishlist ? 'Remove from Wishlist' : 'Add to Wishlist'">
+                  <i [class]="isInWishlist ? 'bi bi-heart-fill text-danger' : 'bi bi-heart'"></i>
+                </button>
+                <button class="btn btn-light rounded-circle p-2 shadow-sm" title="Share">
+                  <i class="bi bi-share"></i>
+                </button>
+                <button class="btn btn-light rounded-circle p-2 shadow-sm" title="Zoom">
+                  <i class="bi bi-search"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Thumbnail Images -->
+        <div class="row g-2" *ngIf="getProductImages().length > 1">
+          <div class="col-2" *ngFor="let image of getProductImages().slice(0, 6); let i = index">
+            <div class="thumbnail-container">
+              <img [src]="image"
+                   class="img-fluid rounded-2 cursor-pointer border thumbnail-image"
+                   [class.border-primary]="i === selectedImageIndex"
+                   [class.border-3]="i === selectedImageIndex"
+                   style="height: 60px; object-fit: cover; width: 100%;"
+                   (click)="selectImage(i)"
+                   [alt]="'Product image ' + (i+1)"
+                   onerror="this.src='/assets/images/placeholder.jpg'">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product Details -->
+    <div class="col-lg-6 col-md-6">
+      <div class="product-details">
+
+        <!-- Reviews and Sold Info -->
+        <div class="d-flex align-items-center mb-3 text-muted">
+          <small class="me-3">No reviews yet</small>
+          <small class="me-3">• 4 sold</small>
+          <small>• <i class="bi bi-patch-check-fill text-success me-1"></i>verified</small>
+        </div>
+
+        <!-- Supplier Info -->
+        <div class="d-flex align-items-center mb-4 p-3 bg-light rounded">
+          <img src="https://via.placeholder.com/40x40?text=YX" class="rounded me-3" alt="Supplier">
+          <div>
+            <h6 class="mb-0">Yuxin Furniture Co., Ltd.</h6>
+            <small class="text-muted">
+              <i class="bi bi-patch-check-fill text-primary me-1"></i>verified Custom Manufacturer • 21 yrs • 50% reorder rate • <span class="text-danger">🇨🇳 CN</span>
+            </small>
+          </div>
+        </div>
+
+        <!-- Price Range -->
+        <div class="price-section mb-4">
+          <h3 class="text-dark fw-bold mb-2">₹22,429.09-53,829.81</h3>
+          <div class="text-muted">
+            <small>Minimum order quantity: 1 set</small>
+          </div>
+        </div>
+
+        <!-- Variations -->
+        <div class="variations-section mb-4">
+          <h6 class="fw-semibold mb-3">Variations</h6>
+
+          <!-- Color Selection -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">color:</label>
+            <span class="text-dark ms-2">Purple</span>
+            <div class="mt-2">
+              <div class="color-option-container d-inline-block">
+                <div class="color-option selected"
+                     style="background: linear-gradient(45deg, purple, #8B008B); width: 40px; height: 40px; border-radius: 8px; border: 3px solid #007bff; cursor: pointer;"
+                     title="Purple">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Size Selection -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">size</label>
+            <div class="mt-2">
+              <button class="btn btn-outline-primary active">218+95+80</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Customization Options -->
+        <div class="customization-section mb-4">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h6 class="fw-semibold mb-0">Customization options</h6>
+            <i class="bi bi-chevron-right"></i>
+          </div>
+
+          <div class="customization-list">
+            <div class="d-flex justify-content-between align-items-center py-2">
+              <div>
+                <i class="bi bi-palette me-2 text-primary"></i>
+                <span>Customized logo</span>
+                <small class="text-muted ms-2">(Min. order: 20 sets)</small>
+              </div>
+            </div>
+            <div class="d-flex justify-content-between align-items-center py-2">
+              <div>
+                <i class="bi bi-box me-2 text-primary"></i>
+                <span>Customized packaging</span>
+                <small class="text-muted ms-2">(Min. order: 20 sets)</small>
+              </div>
+            </div>
+            <div class="d-flex justify-content-between align-items-center py-2">
+              <div>
+                <i class="bi bi-brush me-2 text-primary"></i>
+                <span>Graphic customization</span>
+                <small class="text-muted ms-2">(Min. order: 20 sets)</small>
+              </div>
+            </div>
+          </div>
+
+          <!-- Supplier's customization ability -->
+          <div class="mt-3">
+            <div class="d-flex align-items-center">
+              <span class="fw-semibold me-2">Supplier's customization ability</span>
+              <span class="text-primary fw-semibold">verified</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quantity Selector -->
+        <div class="quantity-section mb-4">
+          <label class="form-label fw-semibold">Quantity:</label>
+          <div class="d-flex align-items-center mt-2">
+            <button class="btn btn-outline-secondary" (click)="updateQuantity(-1)" [disabled]="quantity <= 1">
+              <i class="bi bi-dash"></i>
+            </button>
+            <span class="mx-3 fw-semibold fs-5">{{quantity}}</span>
+            <button class="btn btn-outline-secondary" (click)="updateQuantity(1)" [disabled]="quantity >= 100">
+              <i class="bi bi-plus"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons mb-4">
+          <div class="d-grid gap-2">
+            <button class="btn btn-warning btn-lg fw-semibold py-3"
+                    style="background: linear-gradient(45deg, #ff6b35, #ff8c42);"
+                    (click)="sendInquiry()">
+              Send inquiry
+            </button>
+            <button class="btn btn-outline-primary btn-lg fw-semibold py-3"
+                    (click)="chatNow()">
+              Chat now
+            </button>
+          </div>
+        </div>
+
+        <!-- Product Features -->
+        <div class="product-features mb-4">
+          <div class="row g-3">
+            <div class="col-6">
+              <div class="d-flex align-items-center">
+                <i class="bi bi-truck text-success me-2"></i>
+                <small>Free Shipping</small>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="d-flex align-items-center">
+                <i class="bi bi-shield-check text-success me-2"></i>
+                <small>Quality Assured</small>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="d-flex align-items-center">
+                <i class="bi bi-arrow-clockwise text-success me-2"></i>
+                <small>Easy Returns</small>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="d-flex align-items-center">
+                <i class="bi bi-headset text-success me-2"></i>
+                <small>24/7 Support</small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Supplier Info Card -->
+        <div class="supplier-card bg-light rounded p-3">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <h6 class="mb-1">Yuxin Furniture Co., Ltd.</h6>
+              <small class="text-muted">Custom Manufacturer • 21 years experience</small>
+            </div>
+            <div class="text-end">
+              <div class="text-warning">
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star"></i>
+              </div>
+              <small class="text-muted">50% reorder rate</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Product Description Tabs -->
+  <div class="row mt-5">
+    <div class="col-12">
+      <ul class="nav nav-tabs" id="productTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="description-tab" data-bs-toggle="tab"
+                  data-bs-target="#description" type="button" role="tab">Description</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="specifications-tab" data-bs-toggle="tab"
+                  data-bs-target="#specifications" type="button" role="tab">Specifications</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="reviews-tab" data-bs-toggle="tab"
+                  data-bs-target="#reviews" type="button" role="tab">Reviews ({{reviews.length}})</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="shipping-tab" data-bs-toggle="tab"
+                  data-bs-target="#shipping" type="button" role="tab">Shipping</button>
+        </li>
+      </ul>
+
+      <div class="tab-content" id="productTabsContent">
+        <!-- Description Tab -->
+        <div class="tab-pane fade show active" id="description" role="tabpanel">
+          <div class="p-4">
+            <div [innerHTML]="getSafeHtml(getProductDescription())"></div>
+
+            <!-- Additional Product Details -->
+            <div class="mt-4" *ngIf="product">
+              <h6>Product Highlights:</h6>
+              <ul class="list-unstyled">
+                <li><i class="bi bi-check-circle text-success me-2"></i>Turkish Style Chinese Design</li>
+                <li><i class="bi bi-check-circle text-success me-2"></i>Premium Fabric Material</li>
+                <li><i class="bi bi-check-circle text-success me-2"></i>Hotel Quality Furniture</li>
+                <li><i class="bi bi-check-circle text-success me-2"></i>Free Sample Available</li>
+                <li><i class="bi bi-check-circle text-success me-2"></i>Custom Manufacturing</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Specifications Tab -->
+        <div class="tab-pane fade" id="specifications" role="tabpanel">
+          <div class="p-4">
+            <div class="row">
+              <div class="col-md-6">
+                <h6>Product Specifications</h6>
+                <table class="table table-borderless">
+                  <tr>
+                    <td class="fw-semibold">Category:</td>
+                    <td>Living Room Furniture</td>
+                  </tr>
+                  <tr>
+                    <td class="fw-semibold">Type:</td>
+                    <td>Sofa Set</td>
+                  </tr>
+                  <tr>
+                    <td class="fw-semibold">Material:</td>
+                    <td>Fabric</td>
+                  </tr>
+                  <tr>
+                    <td class="fw-semibold">Style:</td>
+                    <td>Turkish Chinese Design</td>
+                  </tr>
+                  <tr>
+                    <td class="fw-semibold">Dimensions:</td>
+                    <td>218cm x 95cm x 80cm</td>
+                  </tr>
+                </table>
+              </div>
+              <div class="col-md-6">
+                <h6>Manufacturer Details</h6>
+                <table class="table table-borderless">
+                  <tr>
+                    <td class="fw-semibold">Manufacturer:</td>
+                    <td>Yuxin Furniture Co., Ltd.</td>
+                  </tr>
+                  <tr>
+                    <td class="fw-semibold">Experience:</td>
+                    <td>21 years</td>
+                  </tr>
+                  <tr>
+                    <td class="fw-semibold">Reorder Rate:</td>
+                    <td>50%</td>
+                  </tr>
+                  <tr>
+                    <td class="fw-semibold">Certification:</td>
+                    <td>Verified Custom Manufacturer</td>
+                  </tr>
+                  <tr>
+                    <td class="fw-semibold">Country:</td>
+                    <td>China (CN)</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Reviews Tab -->
+        <div class="tab-pane fade" id="reviews" role="tabpanel">
+          <div class="p-4">
+            <div class="text-center py-5">
+              <i class="bi bi-chat-dots fs-1 text-muted"></i>
+              <h6 class="mt-3">No reviews yet</h6>
+              <p class="text-muted">Be the first to review this product</p>
+              <button class="btn btn-primary" (click)="showReviewForm = true">Write a Review</button>
+            </div>
+
+            <!-- Review Form -->
+            <div class="card mt-4" *ngIf="showReviewForm">
+              <div class="card-body">
+                <h6>Write Your Review</h6>
+                <div class="mb-3">
+                  <label class="form-label">Rating</label>
+                  <div class="rating-input">
+                    <span *ngFor="let i of [1,2,3,4,5]"
+                          class="cursor-pointer me-1"
+                          [class]="i <= newReview.rating ? 'text-warning' : 'text-muted'"
+                          (click)="newReview.rating = i">
+                      <i class="bi bi-star-fill"></i>
+                    </span>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Name *</label>
+                  <input type="text" class="form-control" [(ngModel)]="newReview.name" required>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Comment *</label>
+                  <textarea class="form-control" rows="3" [(ngModel)]="newReview.comment" required></textarea>
+                </div>
+                <div class="d-flex gap-2">
+                  <button class="btn btn-primary" (click)="submitReview()">Submit Review</button>
+                  <button class="btn btn-secondary" (click)="showReviewForm = false">Cancel</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Shipping Tab -->
+        <div class="tab-pane fade" id="shipping" role="tabpanel">
+          <div class="p-4">
+            <div class="row">
+              <div class="col-md-6">
+                <h6>Shipping Information</h6>
+                <ul class="list-unstyled">
+                  <li><i class="bi bi-truck text-success me-2"></i>Free shipping available</li>
+                  <li><i class="bi bi-clock text-info me-2"></i>Processing time: 3-7 business days</li>
+                  <li><i class="bi bi-lightning text-warning me-2"></i>Express shipping available</li>
+                  <li><i class="bi bi-geo-alt text-danger me-2"></i>Ships worldwide</li>
+                </ul>
+              </div>
+              <div class="col-md-6">
+                <h6>Return Policy</h6>
+                <ul class="list-unstyled">
+                  <li><i class="bi bi-arrow-clockwise text-success me-2"></i>30-day returns</li>
+                  <li><i class="bi bi-shield-check text-info me-2"></i>Quality guarantee</li>
+                  <li><i class="bi bi-credit-card text-warning me-2"></i>Refund available</li>
+                  <li><i class="bi bi-headset text-primary me-2"></i>Customer support</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Loading Spinner -->
+<div class="text-center py-5" *ngIf="loading">
+  <div class="spinner-border text-primary" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+  <p class="mt-3">Loading product details...</p>
+</div>
+
+<style>
+.color-option {
+  transition: all 0.3s ease;
+}
+
+.color-option:hover {
+  transform: scale(1.1);
+}
+
+.color-option.selected {
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.3);
+}
+
+.thumbnail-image:hover {
+  transform: scale(1.05);
+  transition: transform 0.2s ease;
+}
+
+.product-gallery-container {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.btn-gradient-orange {
+  background: linear-gradient(45deg, #ff6b35, #ff8c42);
+  border: none;
+  color: white;
+}
+
+.btn-gradient-orange:hover {
+  background: linear-gradient(45deg, #ff5722, #ff7043);
+  color: white;
+}
+
+.supplier-card {
+  border-left: 4px solid #007bff;
+}
+
+.customization-list {
+  border-left: 2px solid #e9ecef;
+  padding-left: 1rem;
+}
+</style>

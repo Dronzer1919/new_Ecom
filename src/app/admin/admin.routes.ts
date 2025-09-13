@@ -22,6 +22,10 @@ export const adminRoutes: Routes = [
         loadComponent: () => import('./components/products/product-create.component').then(m => m.ProductCreateComponent)
       },
       {
+        path: 'categories',
+        loadComponent: () => import('./components/categories/category-management.component').then(m => m.CategoryManagementComponent)
+      },
+      {
         path: 'blogs',
         loadComponent: () => import('./components/blogs/blog-management.component').then(m => m.BlogManagementComponent)
       },

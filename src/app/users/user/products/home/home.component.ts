@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit, AfterViewInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { EcommerceApiService, Product as ApiProduct, BlogPost, PromoCard, HomepageData } from '../../../../services/ecommerce-api.service';
+import { CategoryService, CategoryTree } from '../../../../services/category.service';
 import { CartService } from '../../../../services/cart.service';
 import { WishlistService } from '../../../../services/wishlist.service';
 import { ToastrService } from 'ngx-toastr';
@@ -10,7 +11,8 @@ import { takeUntil } from 'rxjs/operators';
 
 declare var bootstrap: any;
 
-type Product = {
+// Local mock data interface
+interface LocalProduct {
   id: number;
   title: string;
   subtitle?: string;
@@ -18,7 +20,7 @@ type Product = {
   image: string;
   rating?: number; // 0-5
   badge?: 'new' | 'sale' | 'hot';
-};
+}
 
 @Component({
   standalone: true,
@@ -38,6 +40,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   featuredProducts: ApiProduct[] = [];
   topRatedProducts: ApiProduct[] = [];
   blogCards: BlogPost[] = [];
+  categories: CategoryTree[] = [];
 
   // Loading state
   isLoading = false;
@@ -52,7 +55,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     { id: 3, title: 'Concept Floor Lamp', price: 119.90, image: 'assets/furniture/promo-3.jpg' }
   ];
 
-  localFeaturedProducts: Product[] = [
+  localFeaturedProducts: LocalProduct[] = [
     { id: 1, title: 'The Signature Chair', price: 499.00, image: 'assets/furniture/chair-1.jpg', rating: 5 },
     { id: 2, title: 'Normal Classic Chair', price: 259.00, image: 'assets/furniture/chair-2.jpg', rating: 4 },
     { id: 3, title: 'Blue Wing Chair', price: 319.00, image: 'assets/furniture/chair-3.jpg', rating: 4, badge: 'new' },
@@ -60,7 +63,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     { id: 5, title: 'Black Wood Chair', price: 199.00, image: 'assets/furniture/chair-5.jpg', rating: 3 }
   ];
 
-  localTopRated: Product[] = [
+  // Top rated products local data
+  localTopRated: LocalProduct[] = [
     { id: 6, title: 'The Signature Chair', price: 499.00, image: 'assets/furniture/chair-6.jpg', rating: 5 },
     { id: 7, title: 'Normal Classic Chair', price: 259.00, image: 'assets/furniture/chair-7.jpg', rating: 5 },
     { id: 8, title: 'Wooden Frame Chair', price: 279.00, image: 'assets/furniture/chair-8.jpg', rating: 4 },
@@ -93,6 +97,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   constructor(
     private apiService: EcommerceApiService,
+    private categoryService: CategoryService,
     private router: Router,
     private cartService: CartService,
     private wishlistService: WishlistService,
@@ -102,6 +107,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnInit(): void {
     console.log('🏠 Home component initialized - with cart functionality');
     this.loadHomepageData();
+    this.loadCategories();
     this.loadWishlistCount();
     // this.initializeCountdown();
   }
@@ -227,6 +233,23 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       });
   }
 
+  private loadCategories(): void {
+    console.log('🔄 Loading categories...');
+    this.categoryService.getCategoriesTree()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          if (response.success) {
+            this.categories = response.categoriesTree || [];
+            console.log('✅ Categories loaded:', this.categories.length);
+          }
+        },
+        error: (error) => {
+          console.error('❌ Error loading categories:', error);
+        }
+      });
+  }
+
   private loadLocalData(): void {
     console.log('🔄 Loading fallback local data...');
     // Fallback to local data
@@ -252,21 +275,25 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     }));
 
     this.featuredProducts = this.localFeaturedProducts.map(item => ({
-      id: item.id.toString(),
+      _id: item.id.toString(),
       title: item.title,
+      description: '',
       price: item.price,
-      image: item.image,
-      rating: item.rating,
-      badge: item.badge
-    }));
+      images: [{ url: item.image, alt: item.title, isPrimary: true }],
+      rating: item.rating ? { average: item.rating, count: 0 } : undefined,
+      badge: item.badge,
+      inventory: { quantity: 10, lowStockAlert: 5 }
+    } as ApiProduct));
 
     this.topRatedProducts = this.localTopRated.map(item => ({
-      id: item.id.toString(),
+      _id: item.id.toString(),
       title: item.title,
+      description: '',
       price: item.price,
-      image: item.image,
-      rating: item.rating
-    }));
+      images: [{ url: item.image, alt: item.title, isPrimary: true }],
+      rating: item.rating ? { average: item.rating, count: 0 } : undefined,
+      inventory: { quantity: 10, lowStockAlert: 5 }
+    } as ApiProduct));
 
     this.blogCards = this.localBlogCards.map(item => ({
       id: item.id.toString(),
@@ -319,14 +346,41 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // Helper methods for template
   getProductImage(product: any): string {
+    // Use new primaryImage field if available
+    if (product.primaryImage) {
+      return product.primaryImage;
+    }
+    
     if (product.images && product.images.length > 0) {
-      return `http://localhost:3000/uploads/${product.images[0]}`;
+      // Handle new API structure where images are objects with url property
+      if (typeof product.images[0] === 'object' && product.images[0].url) {
+        return product.images[0].url;
+      }
+      // Handle legacy format where images are strings
+      if (typeof product.images[0] === 'string') {
+        return product.images[0].startsWith('http') ? product.images[0] : `http://localhost:3000/uploads/${product.images[0]}`;
+      }
     }
     return product.image || '/assets/placeholder.jpg';
   }
 
-  getStarArray(rating: number): number[] {
-    return Array(Math.floor(rating)).fill(0);
+  // Helper to extract first image safely for cart/wishlist operations
+  private extractFirstImage(product: any): string {
+    // Use new primaryImage field if available
+    if (product.primaryImage) {
+      return product.primaryImage;
+    }
+    
+    const first = product?.images?.[0];
+    if (!first) return product.image || '/assets/placeholder.jpg';
+    if (typeof first === 'object') return first.url;
+    return first.startsWith('http') ? first : `http://localhost:3000/uploads/${first}`;
+  }
+
+  getStarArray(rating: number | { average: number; count: number; } | undefined): number[] {
+    if (!rating) return [];
+    const ratingValue = typeof rating === 'object' ? rating.average : rating;
+    return Array(Math.floor(ratingValue)).fill(0);
   }
 
   formatDate(dateString: string): string {
@@ -408,7 +462,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       id: product.id || product._id,
       productName: product.title || product.productName,
       price: product.price,
-      images: product.images ? [`http://localhost:3000/uploads/${product.images[0]}`] : [product.image],
+      images: [this.extractFirstImage(product)],
       category: product.category,
       stock: product.stock || 10,
       weight: product.weight || '500gm'
@@ -428,7 +482,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       id: product.id || product._id,
       productName: product.title || product.productName,
       price: product.price,
-      images: product.images ? [`http://localhost:3000/uploads/${product.images[0]}`] : [product.image],
+      images: [this.extractFirstImage(product)],
       category: product.category
     };
 
@@ -459,5 +513,27 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   // Navigate to wishlist page
   viewWishlist(): void {
     this.router.navigate(['/wishlist']);
+  }
+
+  // Navigate to category products
+  viewCategoryProducts(category: CategoryTree): void {
+    console.log('🏷️ Navigating to category:', category.name);
+    this.router.navigate(['/products'], { queryParams: { category: category._id, categoryName: category.name } });
+  }
+
+  // Get category image URL
+  getCategoryImage(category: CategoryTree): string {
+    if (category.image) {
+      return category.image.startsWith('http') ? category.image : `http://localhost:3000${category.image}`;
+    }
+    return 'assets/placeholder-category.jpg'; // Fallback image
+  }
+
+  // Handle category card hover effects
+  onCategoryHover(event: Event, isHover: boolean): void {
+    const target = event.currentTarget as HTMLElement;
+    if (target) {
+      target.style.transform = isHover ? 'translateY(-5px)' : 'translateY(0)';
+    }
   }
 }

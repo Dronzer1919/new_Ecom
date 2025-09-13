@@ -160,8 +160,19 @@ export class CartComponent implements OnInit {
   }
 
   getImageUrl(item: CartItem): string {
-  const img = item.images && item.images.length > 0 ? item.images[0] : undefined;
-  return normalizeImagePath(img);
+    // First try the images array
+    if (item.images && item.images.length > 0) {
+      const firstImage = item.images[0];
+      // If it's already a normalized URL (starts with http), use it directly
+      if (typeof firstImage === 'string' && firstImage.startsWith('http')) {
+        return firstImage;
+      }
+      // Otherwise, normalize it
+      return normalizeImagePath(firstImage);
+    }
+
+    // Fallback to placeholder
+    return normalizeImagePath(undefined); // This should return the placeholder
   }
 
   // Quick actions

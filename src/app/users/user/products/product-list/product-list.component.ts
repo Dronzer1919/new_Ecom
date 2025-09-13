@@ -43,6 +43,7 @@ export class ProductListComponent implements OnInit {
   itemsPerPage: number = 12;
   totalItems: number = 0;
   paginatedProducts: any[] = [];
+  currentCategoryName: string = '';
 
   // Quick action states
   addingToCart: Set<string> = new Set();
@@ -66,6 +67,15 @@ export class ProductListComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // Check for category filter from query params
+    this.activatedRoute.queryParams.subscribe(params => {
+      const categoryId = params['category'];
+      const categoryName = params['categoryName'];
+      if (categoryId) {
+        this.currentCategoryName = categoryName || 'Category Products';
+        this.filterProductsByCategory(categoryId, categoryName);
+      }
+    });
   }
 
   public getallProducts() {
@@ -82,6 +92,54 @@ export class ProductListComponent implements OnInit {
     });
   }
 
+  // Filter products by category
+  filterProductsByCategory(categoryId: string, categoryName?: string) {
+    this.loading = true;
+    this.productService.getAllProduct().subscribe((data: any) => {
+      // Handle different response formats
+      let allProducts = [];
+      if (data.success && data.data) {
+        // New format from backend
+        allProducts = data.data;
+      } else if (Array.isArray(data)) {
+        // Old format
+        allProducts = data;
+      } else {
+        allProducts = data.products || [];
+      }
+
+      // Filter products by category
+      const categoryProducts = allProducts.filter((product: any) => {
+        // Check different possible category field formats
+        return product.category === categoryId ||
+               (product.category && product.category._id === categoryId) ||
+               (product.category && product.category.toString() === categoryId) ||
+               (product.categoryId && product.categoryId === categoryId);
+      });
+
+      if (categoryProducts.length > 0) {
+        // Set up the filtered products
+        this.originalProductList = categoryProducts;
+        this.displayedProducts = [...this.originalProductList];
+        this.filterList = [...this.originalProductList];
+        this.totalItems = this.filterList.length;
+        this.updatePagination();
+      } else {
+        // No products found for this category
+        this.originalProductList = [];
+        this.displayedProducts = [];
+        this.filterList = [];
+        this.totalItems = 0;
+        this.updatePagination();
+      }
+
+      this.loading = false;
+    }, error => {
+      console.error('Error fetching products for category:', error);
+      this.loading = false;
+    });
+  }
+
   public getProductId() {
     this.activatedRoute.params.subscribe(params => {
       this.productId = params['id'];
@@ -94,13 +152,24 @@ export class ProductListComponent implements OnInit {
   }
 
   public gotoDetails(value: any) {
-    this.router.navigate(['/productDetails/', value.categoryName]);
-    localStorage.setItem('details', JSON.stringify(value));
+    const productId = value._id || value.id;
+    if (productId) {
+      // Use proper product ID routing
+      this.router.navigate(['/productDetails', productId]);
+      // Store product data for compatibility
+      localStorage.setItem('details', JSON.stringify(value));
+    } else {
+      console.error('No product ID found for navigation');
+    }
   }
 
   // Enhanced navigation to product details
   goToProductDetails(product: any) {
-    this.router.navigate(['/product', product._id || product.id]);
+    const productId = product._id || product.id;
+    if (productId) {
+      this.router.navigate(['/productDetails', productId]);
+      localStorage.setItem('details', JSON.stringify(product));
+    }
   }
 
   onSearchTermChange(): void {
@@ -118,22 +187,23 @@ export class ProductListComponent implements OnInit {
     // Apply search filter
     if (this.searchTerm && this.searchTerm.trim() !== '') {
       filteredProducts = filteredProducts.filter((product: any) =>
-        product.productName.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+        (product.title || product.productName || '').toLowerCase().includes(this.searchTerm.toLowerCase()) ||
         (product.description && product.description.toLowerCase().includes(this.searchTerm.toLowerCase())) ||
-        (product.category && product.category.toLowerCase().includes(this.searchTerm.toLowerCase()))
+        (product.category && typeof product.category === 'string' && product.category.toLowerCase().includes(this.searchTerm.toLowerCase())) ||
+        (product.category && product.category.categoryName && product.category.categoryName.toLowerCase().includes(this.searchTerm.toLowerCase()))
       );
     }
 
     // Apply price filter
     if (this.currentFilters.minPrice && this.currentFilters.minPrice !== '') {
       filteredProducts = filteredProducts.filter((product: any) =>
-        parseInt(product.productPrice) >= parseInt(this.currentFilters.minPrice)
+        this.getProductPrice(product) >= parseInt(this.currentFilters.minPrice)
       );
     }
 
     if (this.currentFilters.maxPrice && this.currentFilters.maxPrice !== '') {
       filteredProducts = filteredProducts.filter((product: any) =>
-        parseInt(product.productPrice) <= parseInt(this.currentFilters.maxPrice)
+        this.getProductPrice(product) <= parseInt(this.currentFilters.maxPrice)
       );
     }
 
@@ -171,17 +241,17 @@ export class ProductListComponent implements OnInit {
   sortProducts(products: any[], sortBy: string): any[] {
     switch (sortBy) {
       case 'price-low':
-        return products.sort((a, b) => parseInt(a.productPrice) - parseInt(b.productPrice));
+        return products.sort((a, b) => this.getProductPrice(a) - this.getProductPrice(b));
       case 'price-high':
-        return products.sort((a, b) => parseInt(b.productPrice) - parseInt(a.productPrice));
+        return products.sort((a, b) => this.getProductPrice(b) - this.getProductPrice(a));
       case 'name-asc':
-        return products.sort((a, b) => a.productName.localeCompare(b.productName));
+        return products.sort((a, b) => (a.title || a.productName).localeCompare(b.title || b.productName));
       case 'name-desc':
-        return products.sort((a, b) => b.productName.localeCompare(a.productName));
+        return products.sort((a, b) => (b.title || b.productName).localeCompare(a.title || a.productName));
       case 'rating':
         return products.sort((a, b) => {
-          const ratingA = a.rating || a.productRating || 0;
-          const ratingB = b.rating || b.productRating || 0;
+          const ratingA = a.rating?.average || a.productRating || 0;
+          const ratingB = b.rating?.average || b.productRating || 0;
           return ratingB - ratingA;
         });
       case 'newest':
@@ -218,8 +288,17 @@ export class ProductListComponent implements OnInit {
     const productId = product._id || product.id;
     this.addingToCart.add(productId);
 
-    this.cartService.addToCart(product, 1);
-    this.toastr.success(`${product.productName} added to cart!`);
+    // Prepare product with proper image normalization
+    const cartProduct = {
+      ...product,
+      productName: product.title || product.productName,
+      price: this.getProductPrice(product),
+      originalPrice: this.getOriginalPrice(product),
+      images: [this.getProductImage(product)] // Use our normalized image helper
+    };
+
+    this.cartService.addToCart(cartProduct, 1);
+    this.toastr.success(`${cartProduct.productName} added to cart!`);
 
     setTimeout(() => {
       this.addingToCart.delete(productId);
@@ -325,6 +404,49 @@ export class ProductListComponent implements OnInit {
     return product.badge === badge;
   }
 
+  // Helper to extract first image safely
+  getProductImage(product: any): string {
+    // Use new primaryImage field if available
+    if (product.primaryImage) {
+      return product.primaryImage;
+    }
+
+    if (product.images && product.images.length > 0) {
+      const first = product.images[0];
+      // Handle object format
+      if (typeof first === 'object' && first.url) {
+        return first.url;
+      }
+      // Handle string format
+      if (typeof first === 'string') {
+        return first.startsWith('http') ? first : `http://localhost:3000/uploads/${first}`;
+      }
+    }
+    // Fallback to legacy image field or placeholder
+    return product.image || '/assets/placeholder.jpg';
+  }
+
+  // Helper to get product price (handles different field names)
+  getProductPrice(product: any): number {
+    return product.price || product.productPrice || 0;
+  }
+
+  // Helper to get original price (handles different field names)
+  getOriginalPrice(product: any): number {
+    return product.originalPrice || 0;
+  }
+
+  // Get discount percentage
+  getDiscountPercentage(product: any): number {
+    const currentPrice = this.getProductPrice(product);
+    const originalPrice = this.getOriginalPrice(product);
+
+    if (originalPrice && currentPrice && originalPrice > currentPrice) {
+      return Math.round(((originalPrice - currentPrice) / originalPrice) * 100);
+    }
+    return product.discount || 0;
+  }
+
   // Get badge display class
   getBadgeClass(badge: string): string {
     const badgeClasses: { [key: string]: string } = {
@@ -337,18 +459,11 @@ export class ProductListComponent implements OnInit {
     return badgeClasses[badge] || 'badge bg-secondary';
   }
 
-  // Get discount percentage
-  getDiscountPercentage(product: any): number {
-    if (product.originalPrice && product.productPrice) {
-      const discount = ((product.originalPrice - product.productPrice) / product.originalPrice) * 100;
-      return Math.round(discount);
-    }
-    return product.discount || 0;
-  }
-
   // Check if product is on sale
   isOnSale(product: any): boolean {
-    return product.originalPrice > product.productPrice || product.discount > 0;
+    const originalPrice = this.getOriginalPrice(product);
+    const currentPrice = this.getProductPrice(product);
+    return originalPrice > currentPrice || product.discount > 0;
   }
 
   // Get product availability status

@@ -129,7 +129,7 @@ export class AdminApiService {
     formData.append('status', productData.status);
 
     // Inventory fields
-    formData.append('quantity', productData.inventory.quantity.toString());
+    formData.append('quantity', (productData.inventory.quantity || 0).toString());
     if (productData.inventory.sku) formData.append('sku', productData.inventory.sku);
     if (productData.inventory.weight) formData.append('weight', productData.inventory.weight.toString());
 

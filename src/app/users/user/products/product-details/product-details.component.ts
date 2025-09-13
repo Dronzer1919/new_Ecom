@@ -161,17 +161,22 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
       console.log('✅ Using localStorage data directly:', this.data);
       this.product = {
         _id: this.data.id || this.data._id,
-        title: this.data.title,
-        price: this.data.price,
-        images: [{ url: this.data.image }], // Convert single image to array format
+        title: this.data.title || this.data.productName,
+        price: this.data.price || this.data.productPrice,
+        originalPrice: this.data.originalPrice,
+        images: this.data.images || (this.data.image ? [{ url: this.data.image }] : []),
         description: this.data.description || 'Product description not available.',
-        inventory: { quantity: 10 },
-        // Don't set category for localStorage data since we don't have a valid ObjectId
+        inventory: { quantity: this.data.stock || this.data.quantity || 10 },
+        category: this.data.category,
         badge: this.data.badge,
-        rating: { average: this.data.rating || 0 }
+        rating: { average: this.data.rating || 0, count: this.data.reviewCount || 0 }
       };
+
+      // Normalize images for consistent display
+      this.productImageUrls = this.normalizeProductImages(this.product.images);
+      console.log('🖼️ Normalized product images:', this.productImageUrls);
+
       this.loading = false;
-      // this.loadRelatedProducts(); // Disabled to prevent ObjectId casting error
       this.loadReviews();
       return;
     }
@@ -298,6 +303,31 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
     this.selectedImageIndex = index;
   }
 
+  // New methods for enhanced functionality
+  previousImage() {
+    const images = this.getProductImages();
+    if (images.length > 1) {
+      this.selectedImageIndex = this.selectedImageIndex > 0 ? this.selectedImageIndex - 1 : images.length - 1;
+    }
+  }
+
+  nextImage() {
+    const images = this.getProductImages();
+    if (images.length > 1) {
+      this.selectedImageIndex = this.selectedImageIndex < images.length - 1 ? this.selectedImageIndex + 1 : 0;
+    }
+  }
+
+  sendInquiry() {
+    // Implement send inquiry functionality
+    this.toastr.info('Inquiry functionality will be implemented');
+  }
+
+  chatNow() {
+    // Implement chat functionality
+    this.toastr.info('Chat functionality will be implemented');
+  }
+
   updateQuantity(change: number) {
     const newQuantity = this.quantity + change;
     if (newQuantity >= 1 && newQuantity <= 10) {
@@ -310,6 +340,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
 
     const productWithOptions = {
       ...this.product,
+      productName: this.product.title || this.product.productName,
       selectedWeight: this.selectedWeight,
       selectedSize: this.selectedSize,
       selectedColor: this.selectedColor
@@ -577,5 +608,32 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
   if (this.productImageUrls && this.productImageUrls.length > 0) return this.productImageUrls;
   if (this.product?.images) return this.normalizeProductImages(this.product.images);
   return ['/assets/images/placeholder.jpg'];
+  }
+
+  // Helper methods for consistent data access
+  getProductTitle(): string {
+    return this.product?.title || this.product?.productName || this.data?.title || 'Product Name';
+  }
+
+  getProductPrice(): number {
+    return this.product?.price || this.product?.productPrice || this.data?.price || 0;
+  }
+
+  getOriginalPrice(): number {
+    return this.product?.originalPrice || this.data?.originalPrice || 0;
+  }
+
+  getProductStock(): number {
+    return this.product?.inventory?.quantity || this.product?.stock || this.data?.stock || 0;
+  }
+
+  getDiscountPercentage(): number {
+    const currentPrice = this.getProductPrice();
+    const originalPrice = this.getOriginalPrice();
+
+    if (originalPrice && currentPrice && originalPrice > currentPrice) {
+      return Math.round(((originalPrice - currentPrice) / originalPrice) * 100);
+    }
+    return this.product?.discount || 0;
   }
 }

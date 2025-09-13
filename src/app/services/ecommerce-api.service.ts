@@ -4,15 +4,76 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 
 export interface Product {
-  id: string;
+  _id: string;
   title: string;
   subtitle?: string;
+  description: string;
+  shortDescription?: string;
   price: number;
   originalPrice?: number;
-  image: string;
-  rating?: number;
-  badge?: 'new' | 'sale' | 'hot' | 'featured' | 'limited';
-  category?: string;
+  category?: {
+    _id: string;
+    name: string;
+    slug: string;
+  };
+  subcategory?: {
+    _id: string;
+    name: string;
+    slug: string;
+  };
+  brand?: string;
+  images: {
+    url: string;
+    alt: string;
+    isPrimary: boolean;
+  }[];
+  specifications?: {
+    name: string;
+    value: string;
+    unit?: string;
+    category?: string;
+  }[];
+  features?: string[];
+  technicalSpecs?: {
+    category: string;
+    specs: {
+      name: string;
+      value: string;
+      unit?: string;
+    }[];
+  }[];
+  badge?: 'new' | 'sale' | 'hot' | 'featured' | 'limited' | 'bestseller';
+  rating?: {
+    average: number;
+    count: number;
+  };
+  inventory: {
+    quantity: number;
+    sku?: string;
+    weight?: number;
+    dimensions?: {
+      length: number;
+      width: number;
+      height: number;
+      unit: string;
+    };
+    lowStockAlert: number;
+  };
+  variants?: any[];
+  hasVariants: boolean;
+  tags: string[];
+  relatedProducts?: Product[];
+  crossSellProducts?: Product[];
+  featured: boolean;
+  topRated: boolean;
+  status: 'active' | 'inactive' | 'discontinued' | 'draft';
+  seo?: {
+    metaTitle?: string;
+    metaDescription?: string;
+    slug: string;
+  };
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface BlogPost {
@@ -89,16 +150,19 @@ export class EcommerceApiService {
       );
   }
 
-  // Product APIs
+  // Enhanced Product APIs
   getAllProducts(params: {
     page?: number;
     limit?: number;
     category?: string;
-    featured?: boolean;
-    topRated?: boolean;
-    badge?: string;
+    subcategory?: string;
+    brand?: string;
     minPrice?: number;
     maxPrice?: number;
+    featured?: boolean;
+    topRated?: boolean;
+    status?: string;
+    search?: string;
     sortBy?: string;
     sortOrder?: 'asc' | 'desc';
   } = {}): Observable<{products: Product[], pagination: any}> {
@@ -112,12 +176,12 @@ export class EcommerceApiService {
       }
     });
 
-    return this.http.get<{success: boolean, data: Product[], pagination: any}>(`${this.baseUrl}/products/all`, { params: httpParams })
+    return this.http.get<{success: boolean, products: Product[], pagination: any}>(`${this.baseUrl}/products`, { params: httpParams })
       .pipe(
         map(response => {
           this.setLoading(false);
           return {
-            products: response.data,
+            products: response.products,
             pagination: response.pagination
           };
         }),
@@ -126,28 +190,40 @@ export class EcommerceApiService {
   }
 
   getFeaturedProducts(limit: number = 5): Observable<Product[]> {
-    return this.http.get<{success: boolean, data: Product[]}>(`${this.baseUrl}/products/featured?limit=${limit}`)
+    return this.http.get<{success: boolean, products: Product[]}>(`${this.baseUrl}/products/featured?limit=${limit}`)
       .pipe(
-        map(response => response.data),
+        map(response => response.products),
         catchError(this.handleError)
       );
   }
 
   getTopRatedProducts(limit: number = 4): Observable<Product[]> {
-    return this.http.get<{success: boolean, data: Product[]}>(`${this.baseUrl}/products/top-rated?limit=${limit}`)
+    return this.http.get<{success: boolean, products: Product[]}>(`${this.baseUrl}/products/top-rated?limit=${limit}`)
       .pipe(
-        map(response => response.data),
+        map(response => response.products),
         catchError(this.handleError)
       );
   }
 
   getProductById(id: string): Observable<Product> {
     this.setLoading(true);
-    return this.http.get<{success: boolean, data: Product}>(`${this.baseUrl}/products/${id}`)
+    return this.http.get<{success: boolean, product: Product}>(`${this.baseUrl}/products/${id}`)
       .pipe(
         map(response => {
           this.setLoading(false);
-          return response.data;
+          return response.product;
+        }),
+        catchError(this.handleError)
+      );
+  }
+
+  getProductBySlug(slug: string): Observable<Product> {
+    this.setLoading(true);
+    return this.http.get<{success: boolean, product: Product}>(`${this.baseUrl}/products/slug/${slug}`)
+      .pipe(
+        map(response => {
+          this.setLoading(false);
+          return response.product;
         }),
         catchError(this.handleError)
       );
@@ -155,12 +231,9 @@ export class EcommerceApiService {
 
   searchProducts(params: {
     q: string;
-    category?: string;
-    minPrice?: number;
-    maxPrice?: number;
     page?: number;
     limit?: number;
-  }): Observable<{products: Product[], pagination: any}> {
+  }): Observable<{products: Product[], pagination: any, searchQuery: string}> {
     this.setLoading(true);
     let httpParams = new HttpParams();
 
@@ -171,28 +244,44 @@ export class EcommerceApiService {
       }
     });
 
-    return this.http.get<{success: boolean, data: Product[], pagination: any}>(`${this.baseUrl}/products/search`, { params: httpParams })
+    return this.http.get<{success: boolean, products: Product[], pagination: any, searchQuery: string}>(`${this.baseUrl}/products/search`, { params: httpParams })
       .pipe(
         map(response => {
           this.setLoading(false);
           return {
-            products: response.data,
-            pagination: response.pagination
+            products: response.products,
+            pagination: response.pagination,
+            searchQuery: response.searchQuery
           };
         }),
         catchError(this.handleError)
       );
   }
 
-  getProductsByCategory(category: string, page: number = 1, limit: number = 20): Observable<{products: Product[], pagination: any}> {
+  getProductsByCategory(categoryId: string, params: {
+    page?: number;
+    limit?: number;
+    sortBy?: string;
+    sortOrder?: 'asc' | 'desc';
+  } = {}): Observable<{products: Product[], pagination: any, totalProducts: number}> {
     this.setLoading(true);
-    return this.http.get<{success: boolean, data: Product[], pagination: any}>(`${this.baseUrl}/home/products/category/${category}?page=${page}&limit=${limit}`)
+    let httpParams = new HttpParams();
+
+    Object.keys(params).forEach(key => {
+      const value = (params as any)[key];
+      if (value !== undefined && value !== null) {
+        httpParams = httpParams.set(key, value.toString());
+      }
+    });
+
+    return this.http.get<{success: boolean, products: Product[], pagination: any, totalProducts: number}>(`${this.baseUrl}/products/category/${categoryId}`, { params: httpParams })
       .pipe(
         map(response => {
           this.setLoading(false);
           return {
-            products: response.data,
-            pagination: response.pagination
+            products: response.products,
+            pagination: response.pagination,
+            totalProducts: response.totalProducts
           };
         }),
         catchError(this.handleError)

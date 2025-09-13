@@ -9,13 +9,13 @@ export const EndPoints = {
         setNewPassword: '{0}/auth/setNewPassword',
         checkEmailExistence: '{0}/auth/checkEmail',
         // Product APIs
-        addProduct: '{0}/products/create-products',
-        getAllProduct: '{0}/products/getAllProduct',
+        addProduct: '{0}/api/products',
+        getAllProduct: '{0}/api/products/all',
         getProductById: '{0}/api/products/{1}',
         getRelatedProducts: '{0}/api/products/related/{1}/{2}',
-        deleteProduct: '{0}/products/deleteProduct/{1}',
-        editProduct: '{0}/products/editProduct/{1}',
-        addType: '{0}/products/addtypes',
+        deleteProduct: '{0}/api/products/{1}',
+        editProduct: '{0}/api/products/{1}',
+        addType: '{0}/api/products',
 
         // User APIs
         addUser: '{0}/users/create',
