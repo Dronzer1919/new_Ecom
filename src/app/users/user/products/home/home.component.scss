@@ -1,5 +1,14 @@
 /* home.component.scss - Modern e-commerce homepage styles */
 
+/* Custom section backgrounds */
+.banner-section-bg {
+  background-color: #DDDDDD !important;
+}
+
+.categories-section-bg {
+  background-color: #EEEEEE !important;
+}
+
 /* Gradient color scheme with wooden tones */
 :root {
   --gradient-wood-dark: linear-gradient(135deg, #8B4513 0%, #A0522D 50%, #D2691E 100%);
@@ -354,38 +363,7 @@
   }
 }
 
-/* Promo carousel enhancements */
-#promoCarousel {
-  margin-bottom: 3rem;
-
-  .carousel-item {
-    .row {
-      justify-content: center;
-    }
-    .col-12.col-md-10 {
-      width: 100%;
-      max-width: 100%;
-      flex: 0 0 100%;
-      .card {
-        border-radius: 0;
-        overflow: visible;
-        background: transparent;
-        border: none;
-        box-shadow: none;
-        img {
-          max-height: 300px;
-          width: 100%;
-          object-fit: contain;
-          object-position: center;
-          transition: transform 0.3s ease;
-          &:hover {
-            transform: scale(1.02);
-          }
-        }
-      }
-    }
-  }
-}
+/* Promo carousel styles removed - no longer using carousels for promos */
 
 /* Product carousel styles */
 .product-carousel {
@@ -474,41 +452,7 @@
     }
 }
 
-.testimonial-strip {
-    background: linear-gradient(120deg, #232323 60%, #444 100%);
-}
-
-.counter-box {
-    min-width: 70px;
-    .display-6 {
-        font-size: 2.2rem;
-        font-weight: 700;
-    }
-}
-
-.icon-card {
-    box-shadow: 0 2px 16px rgba(0,0,0,0.08);
-    border-radius: 1rem;
-    background: #fff;
-}
-
-.newsletter {
-    background: #222;
-    border-radius: 1rem;
-}
-
-.footer {
-    background: #232323;
-    font-size: 1rem;
-    .link-light {
-        color: #fff !important;
-        opacity: 0.8;
-        &:hover {
-            opacity: 1;
-            text-decoration: underline;
-        }
-    }
-}
+/* Unused styles removed: testimonial-strip, counter-box, icon-card, newsletter, footer */
 
 @media (max-width: 768px) {
     .hero-content {
@@ -520,20 +464,7 @@
         padding: 0.5rem;
     }
 
-    // Keep full width on mobile with 300px height
-    #heroCarousel {
-      .carousel-item img {
-        height: 300px;
-        object-fit: contain;
-      }
-    }
-
-    #promoCarousel {
-      .carousel-item img {
-        height: 300px;
-        object-fit: contain;
-      }
-    }
+    // Mobile responsive image heights maintained
 
     .product-carousel {
       .card-img-top {
@@ -542,68 +473,7 @@
       }
     }
 }
-.griddiv{
-    margin-top: 5%;
-}
-
-.mobile-image{
-    height: 15rem;
-    border-radius: 5%;
-    background-color: #e4e2e3;
-}
-
-.mobile{
-    height: 16rem ;
-    width: 100%;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    transition: transform .2s;
-    border-bottom: 1px solid lightgray;
-}
-
-.product-section{
-    height: 15rem;
-    background-color: #ffffff;
-    margin-bottom: 7%;
-    border-radius: 5%;
-    border: solid 0.5px #bbb;
-}
-
-.wishlist-icons{
-    position: absolute;
-    // margin-left: 20%;
-    height: 25px;
-    width: 25px;
-    background-color: #ccc;
-    border-radius: 50%;
-    // display: inline-block;
-    // margin-top: 0.5%;
-}
-
-#heart{
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  width: 20px;
-//   height: 20px;
-  margin-top: 3px;
-}
-
-
-
-.Details{
-  padding-left: 2%;
-  margin-top: 8%;
-  position: relative;
-}
-
-.btn{
-    background-color:#f95b01;
-    color:#ffffff;
-    margin-right: 3%;
-    float: right;
-}
+/* Legacy mobile styles removed - not used in current component */
 
 /* Enhanced Image Visibility Fixes */
 .card-img-top {
@@ -749,12 +619,7 @@ img:not([src=""]) {
   }
 }
 
-@media (max-width: 768px)  {
-    #mobilehidden{
-        visibility:collapse;
-        margin-bottom: -90%;
-    }
-}
+/* Unused mobile styles removed */
 
 
 .card{

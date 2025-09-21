@@ -11,7 +11,7 @@ import { takeUntil } from 'rxjs/operators';
 
 declare var bootstrap: any;
 
-// Local mock data interface
+// Local mock data interface (kept for fallback compatibility)
 interface LocalProduct {
   id: number;
   title: string;
@@ -90,10 +90,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   ];
 
-  // Countdown (Deals This Week)
-  dealEndsAt = new Date();
-  private timer?: any;
-  countdown = { d: '00', h: '00', m: '00', s: '00' };
+  // Countdown functionality removed - no longer needed
 
   constructor(
     private apiService: EcommerceApiService,
@@ -109,7 +106,6 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.loadHomepageData();
     this.loadCategories();
     this.loadWishlistCount();
-    // this.initializeCountdown();
   }
 
   ngAfterViewInit(): void {
@@ -120,7 +116,6 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-    if (this.timer) clearInterval(this.timer);
   }
 
   private initializeCarousels(): void {
@@ -130,9 +125,6 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       if (typeof bootstrap !== 'undefined') {
         console.log('🅱️ Bootstrap found, initializing carousels');
         const heroCarousel = document.getElementById('heroCarousel');
-  // promoCarousel removed from template; skip querying it
-  const featuredCarousel = document.getElementById('featuredProductCarousel');
-        const topRatedCarousel = document.getElementById('topRatedProductCarousel');
 
         if (heroCarousel) {
           console.log('🎯 Initializing hero carousel with banners:', this.heroData?.banners?.length || 0);
@@ -142,24 +134,6 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
           });
         } else {
           console.log('❌ Hero carousel element not found');
-        }
-
-  // Promo carousel removed — no initialization needed
-
-        if (featuredCarousel) {
-          console.log('⭐ Initializing featured products carousel');
-          new bootstrap.Carousel(featuredCarousel, {
-            interval: 5000,
-            ride: 'carousel'
-          });
-        }
-
-        if (topRatedCarousel) {
-          console.log('🏆 Initializing top rated products carousel');
-          new bootstrap.Carousel(topRatedCarousel, {
-            interval: 6000,
-            ride: 'carousel'
-          });
         }
       } else {
         console.log('❌ Bootstrap not found');
@@ -311,35 +285,6 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     console.log('📝 Local blog cards:', this.blogCards.length);
   }
 
-  private initializeCountdown(): void {
-    // Set deal to end in 6 days at 23:59:59
-    const ends = new Date();
-    ends.setDate(ends.getDate() + 6);
-    ends.setHours(23, 59, 59, 0);
-    this.dealEndsAt = ends;
-    this.updateCountdown();
-    this.timer = setInterval(() => this.updateCountdown(), 1000);
-  }
-
-  private updateCountdown(): void {
-    const now = new Date().getTime();
-    const t = this.dealEndsAt.getTime() - now;
-    if (t <= 0) {
-      this.countdown = { d: '00', h: '00', m: '00', s: '00' };
-      return;
-    }
-    const d = Math.floor(t / (1000 * 60 * 60 * 24));
-    const h = Math.floor((t % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const m = Math.floor((t % (1000 * 60 * 60)) / (1000 * 60));
-    const s = Math.floor((t % (1000 * 60)) / 1000);
-    this.countdown = {
-      d: String(d).padStart(2, '0'),
-      h: String(h).padStart(2, '0'),
-      m: String(m).padStart(2, '0'),
-      s: String(s).padStart(2, '0')
-    };
-  }
-
   asCurrency(n: number): string {
     return '£' + n.toFixed(2);
   }
@@ -350,7 +295,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     if (product.primaryImage) {
       return product.primaryImage;
     }
-    
+
     if (product.images && product.images.length > 0) {
       // Handle new API structure where images are objects with url property
       if (typeof product.images[0] === 'object' && product.images[0].url) {
@@ -370,7 +315,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     if (product.primaryImage) {
       return product.primaryImage;
     }
-    
+
     const first = product?.images?.[0];
     if (!first) return product.image || '/assets/placeholder.jpg';
     if (typeof first === 'object') return first.url;
@@ -393,14 +338,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  // Helper method to chunk arrays for carousel slides
-  getProductChunks(products: any[], chunkSize: number): any[][] {
-    const chunks: any[][] = [];
-    for (let i = 0; i < products.length; i += chunkSize) {
-      chunks.push(products.slice(i, i + chunkSize));
-    }
-    return chunks;
-  }
+  // Helper method to chunk arrays for carousel slides (removed - no longer needed for carousels)
 
   // Helper method to get blog image URL
   getBlogImage(blog: any): string {
@@ -440,11 +378,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  // Simple test method to verify clicks work
-  testClick(): void {
-    console.log('🧪 TEST CLICK WORKS!');
-    alert('Click is working!');
-  }
+  // Simple test method (removed - not needed in production)
 
   // Navigate to product list
   viewAllProducts(): void {
